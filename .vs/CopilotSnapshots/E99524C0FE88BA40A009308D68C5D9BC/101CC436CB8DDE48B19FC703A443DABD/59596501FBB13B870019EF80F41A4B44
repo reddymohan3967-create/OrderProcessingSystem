@@ -1,0 +1,38 @@
+﻿using BackgroundWorker;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using OrderService.Data;
+using Microsoft.Extensions.DependencyInjection;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+// Resolve the same absolute orders.db path used by the API to ensure both processes use the same file.
+var workerDbPath = Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, "..", "OrderService", "orders.db"));
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite($"Data Source={workerDbPath}"));
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration["RabbitMq:Host"], h =>
+        {
+            h.Username(builder.Configuration["RabbitMq:Username"]);
+            h.Password(builder.Configuration["RabbitMq:Password"]);
+        });
+    });
+});
+
+builder.Services.AddHostedService<Worker>();
+
+var host = builder.Build();
+
+// Apply EF Core migrations on startup so the SQLite database and tables (including OutboxMessages)
+// are created before the background worker starts processing.
+using (var scope = host.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
+host.Run();

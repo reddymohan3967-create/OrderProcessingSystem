@@ -1,0 +1,47 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Shared.Contracts.DTOs;
+using Shared.Contracts.Enums;
+using OrderService.Interfaces;
+
+namespace OrderService.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class OrdersController : ControllerBase
+{
+    private readonly IOrderService _svc;
+    public OrdersController(IOrderService svc) => _svc = svc;
+
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateOrderRequest request)
+    {
+        var created = await _svc.CreateOrderAsync(request);
+        // try read Id for route
+        var idProp = created?.GetType().GetProperty("Id");
+        var id = idProp?.GetValue(created) as Guid? ?? Guid.Empty;
+        return CreatedAtAction(nameof(GetById), new { id }, created);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var order = await _svc.GetOrderByIdAsync(id);
+        if (order == null) return NotFound();
+        return Ok(order);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> List([FromQuery] OrderStatus? status = null)
+    {
+        var list = await _svc.GetOrdersAsync(status);
+        return Ok(list);
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Cancel(Guid id)
+    {
+        var ok = await _svc.CancelOrderAsync(id);
+        if (!ok) return BadRequest(new { message = "Unable to cancel order. Only Pending orders can be canceled." });
+        return NoContent();
+    }
+}

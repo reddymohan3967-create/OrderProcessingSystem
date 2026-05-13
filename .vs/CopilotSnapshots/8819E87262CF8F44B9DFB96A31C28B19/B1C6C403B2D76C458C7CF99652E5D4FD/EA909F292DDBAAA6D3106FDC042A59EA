@@ -1,0 +1,58 @@
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using OrderService.Data;
+using OrderService.Entities;
+
+namespace BackgroundWorker;
+
+public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, IBus bus) : BackgroundService
+{
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        // Simple outbox publisher loop
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            try
+            {
+                using var scope = scopeFactory.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                var pending = await db.OutboxMessages
+                    .Where(m => m.PublishedAtUtc == null)
+                    .OrderBy(m => m.CreatedAtUtc)
+                    .Take(20)
+                    .ToListAsync(stoppingToken);
+
+                foreach (var msg in pending)
+                {
+                    try
+                    {
+                        // Publish using MassTransit - publish raw JSON as message type by EventType
+                        var eventType = msg.EventType;
+                        var json = msg.Payload;
+
+                        // For this assignment we publish as a generic object message
+                        await bus.Publish(json, stoppingToken);
+
+                        msg.PublishedAtUtc = DateTime.UtcNow;
+                        msg.Error = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        msg.RetryCount += 1;
+                        msg.Error = ex.Message;
+                    }
+                }
+
+                await db.SaveChangesAsync(stoppingToken);
+            }
+            catch (OperationCanceledException) { break; }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Outbox worker failure");
+            }
+
+            await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+        }
+    }
+}

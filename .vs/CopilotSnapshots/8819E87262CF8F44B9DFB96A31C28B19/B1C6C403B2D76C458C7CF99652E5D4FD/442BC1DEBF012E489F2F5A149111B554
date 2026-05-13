@@ -1,0 +1,70 @@
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using OrderService.Data;
+using OrderService.Entities;
+using Shared.Contracts.Events;
+using System.Text.Json;
+
+namespace BackgroundWorker;
+
+public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, IBus bus) : BackgroundService
+{
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        logger.LogInformation("Outbox Publisher Worker started");
+
+        // Simple outbox publisher loop
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            try
+            {
+                using var scope = scopeFactory.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                var pending = await db.OutboxMessages
+                    .Where(m => m.PublishedAtUtc == null)
+                    .OrderBy(m => m.CreatedAtUtc)
+                    .Take(20)
+                    .ToListAsync(stoppingToken);
+
+                foreach (var msg in pending)
+                {
+                    try
+                    {
+                        // Deserialize and publish typed event
+                        if (msg.EventType == nameof(OrderCreatedEvent))
+                        {
+                            var evt = JsonSerializer.Deserialize<OrderCreatedEvent>(msg.Payload);
+                            if (evt != null)
+                                await bus.Publish<OrderCreatedEvent>(evt, stoppingToken);
+                        }
+
+                        msg.PublishedAtUtc = DateTime.UtcNow;
+                        msg.Error = null;
+                        logger.LogInformation("Published outbox message {MessageId} ({EventType})", msg.Id, msg.EventType);
+                    }
+                    catch (Exception ex)
+                    {
+                        msg.RetryCount += 1;
+                        msg.Error = ex.Message;
+                        logger.LogError(ex, "Failed to publish outbox message {MessageId}, retry count: {RetryCount}", msg.Id, msg.RetryCount);
+                    }
+                }
+
+                await db.SaveChangesAsync(stoppingToken);
+            }
+            catch (OperationCanceledException) 
+            { 
+                break; 
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Outbox worker failure");
+            }
+
+            await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+        }
+
+        logger.LogInformation("Outbox Publisher Worker stopped");
+    }
+}

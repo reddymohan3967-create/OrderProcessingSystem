@@ -1,0 +1,132 @@
+using Microsoft.EntityFrameworkCore;
+using OrderService.Data;
+using OrderService.Entities;
+using OrderService.Interfaces;
+using Shared.Contracts.DTOs;
+using Shared.Contracts.Enums;
+using System.Text.Json;
+using Shared.Contracts.Events;
+
+namespace OrderService.Services;
+
+public class OrderService : IOrderService
+{
+    private readonly AppDbContext _dbContext;
+
+    public OrderService(AppDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<OrderResponse> CreateOrderAsync(CreateOrderRequest request)
+    {
+        if (request.Items is null || request.Items.Count == 0)
+            throw new ArgumentException("At least one order item is required.");
+
+        await using var transaction =
+            await _dbContext.Database.BeginTransactionAsync();
+
+        var order = new Order
+        {
+            Id = Guid.NewGuid(),
+            CreatedAtUtc = DateTime.UtcNow,
+            Status = OrderStatus.Pending,
+            TotalAmount = request.Items.Sum(i => i.Quantity * i.UnitPrice),
+            Items = request.Items.Select(item => new OrderItem
+            {
+                Id = Guid.NewGuid(),
+                ProductName = item.ProductName,
+                Quantity = item.Quantity,
+                UnitPrice = item.UnitPrice
+            }).ToList()
+        };
+
+        _dbContext.Orders.Add(order);
+
+        var orderCreatedEvent = new OrderCreatedEvent
+        {
+            OrderId = order.Id,
+            CreatedAtUtc = order.CreatedAtUtc,
+            Status = order.Status,
+            TotalAmount = order.TotalAmount,
+            Items = request.Items
+        };
+
+        var outboxMessage = new OutboxMessage
+        {
+            Id = Guid.NewGuid(),
+            EventType = nameof(OrderCreatedEvent),
+            Payload = JsonSerializer.Serialize(orderCreatedEvent),
+            CreatedAtUtc = DateTime.UtcNow,
+            RetryCount = 0
+        };
+
+        _dbContext.OutboxMessages.Add(outboxMessage);
+
+        await _dbContext.SaveChangesAsync();
+        await transaction.CommitAsync();
+
+        return MapToResponse(order);
+    }
+
+    public async Task<OrderResponse?> GetOrderByIdAsync(Guid id)
+    {
+        var order = await _dbContext.Orders
+            .Include(o => o.Items)
+            .FirstOrDefaultAsync(o => o.Id == id);
+
+        return order is null ? null : MapToResponse(order);
+    }
+
+    public async Task<List<OrderResponse>> GetOrdersAsync(OrderStatus? status = null)
+    {
+        var query = _dbContext.Orders
+            .Include(o => o.Items)
+            .AsQueryable();
+
+        if (status.HasValue)
+            query = query.Where(o => o.Status == status.Value);
+
+        var orders = await query
+            .OrderByDescending(o => o.CreatedAtUtc)
+            .ToListAsync();
+
+        return orders.Select(MapToResponse).ToList();
+    }
+
+    public async Task<bool> CancelOrderAsync(Guid id)
+    {
+        var order = await _dbContext.Orders
+            .FirstOrDefaultAsync(o => o.Id == id);
+
+        if (order is null)
+            return false;
+
+        if (order.Status != OrderStatus.Pending)
+            throw new InvalidOperationException(
+                "Only orders in Pending status can be cancelled.");
+
+        order.Status = OrderStatus.Cancelled;
+
+        await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
+
+    private static OrderResponse MapToResponse(Order order)
+    {
+        return new OrderResponse
+        {
+            Id = order.Id,
+            CreatedAtUtc = order.CreatedAtUtc,
+            Status = order.Status,
+            TotalAmount = order.TotalAmount,
+            Items = order.Items.Select(i => new OrderItemDto
+            {
+                ProductName = i.ProductName,
+                Quantity = i.Quantity,
+                UnitPrice = i.UnitPrice
+            }).ToList()
+        };
+    }
+}

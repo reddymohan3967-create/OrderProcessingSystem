@@ -1,0 +1,20 @@
+﻿using MassTransit;
+using Shared.Contracts.Events;
+
+namespace BackgroundWorker;
+
+public class DebugConsumer : IConsumer<OrderCreatedEvent>
+{
+    private readonly ILogger<DebugConsumer> _logger;
+
+    public DebugConsumer(ILogger<DebugConsumer> logger)
+    {
+        _logger = logger;
+    }
+
+    public Task Consume(ConsumeContext<OrderCreatedEvent> context)
+    {
+        _logger.LogInformation("DebugConsumer received OrderCreatedEvent {OrderId}", context.Message.OrderId);
+        return Task.CompletedTask;
+    }
+}

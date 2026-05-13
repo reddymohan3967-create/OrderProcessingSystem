@@ -1,0 +1,36 @@
+﻿using BackgroundWorker;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using OrderService.Data;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        // Set free development license (unlimited endpoints)
+        cfg.SetLicense(new MassTransit.Licensing.License
+        {
+            ExpirationDate = DateOnly.MaxValue,
+            Limitations = MassTransit.Licensing.LicenseLimitations.Unlimited
+        });
+
+        cfg.Host(
+            builder.Configuration["RabbitMq:Host"]!,
+            h =>
+            {
+                h.Username(builder.Configuration["RabbitMq:Username"]!);
+                h.Password(builder.Configuration["RabbitMq:Password"]!);
+            });
+    });
+});
+
+builder.Services.AddHostedService<Worker>();
+
+var host = builder.Build();
+host.Run();
