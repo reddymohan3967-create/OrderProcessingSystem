@@ -8,5 +8,7 @@ public class OrderResponse
     public DateTime CreatedAtUtc { get; set; }
     public OrderStatus Status { get; set; }
     public decimal TotalAmount { get; set; }
+    public string Email { get; set; } = string.Empty;
+
     public List<OrderItemDto> Items { get; set; } = new List<OrderItemDto>();
 }

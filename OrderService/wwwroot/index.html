@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OrderService Demo</title>
+  <style>
+    :root{--accent:#2b8cff;--muted:#666}
+    body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f6f8fb; color:#1f2937; margin:0; padding:2rem}
+    .container{max-width:1000px;margin:0 auto}
+    header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
+    h1{margin:0;font-size:1.5rem}
+    .grid{display:grid;grid-template-columns:1fr 420px;gap:1rem}
+    .card{background:#fff;border-radius:8px;padding:1rem;box-shadow:0 1px 3px rgba(15,23,42,0.06)}
+    label{display:block;font-size:0.85rem;color:var(--muted);margin-bottom:0.25rem}
+    select,input[type=number],input[type=text],input[type=email]{width:100%;padding:0.5rem;border:1px solid #e6e9ef;border-radius:6px}
+    button{background:var(--accent);color:#fff;border:none;padding:0.5rem 0.75rem;border-radius:6px;cursor:pointer}
+    button.ghost{background:transparent;color:var(--accent);border:1px solid #e6e9ef}
+    .items-table{width:100%;border-collapse:collapse;margin-top:0.5rem}
+    .items-table th,.items-table td{padding:0.5rem;text-align:left;border-bottom:1px solid #f0f2f5}
+    .items-list{margin-top:0.5rem}
+    .result{white-space:pre-wrap;background:#0f1724;color:#e6eef8;padding:0.75rem;border-radius:6px;overflow:auto}
+    .muted{color:var(--muted);font-size:0.9rem}
+    .row{display:flex;gap:0.5rem}
+    .col{flex:1}
+    .small{width:80px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>OrderService Demo UI</h1>
+      <div class="muted">Create orders, view, list and cancel</div>
+    </header>
+
+    <div class="grid">
+      <div>
+        <div class="card" style="margin-bottom:1rem">
+          <h2 style="margin:0 0 0.5rem 0">Create Order</h2>
+
+          <label for="productSelect">Product</label>
+          <div class="row">
+            <select id="productSelect">
+              <option value="Widget|9.99">Widget — $9.99</option>
+              <option value="Gizmo|14.50">Gizmo — $14.50</option>
+              <option value="Doohickey|4.50">Doohickey — $4.50</option>
+              <option value="Thingamajig|7.25">Thingamajig — $7.25</option>
+            </select>
+            <input id="qty" type="number" min="1" value="1" class="small" />
+            <input id="price" type="text" value="9.99" class="small" readonly />
+            <button onclick="addItem()">Add</button>
+          </div>
+
+          <div style="margin-top:0.75rem">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="customer@example.com" />
+          </div>
+
+          <div class="items-list">
+            <table class="items-table" id="itemsTable">
+              <thead><tr><th>Product</th><th style="width:80px">Qty</th><th style="width:110px">Unit Price</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div style="margin-top:0.75rem;display:flex;gap:0.5rem;align-items:center">
+            <button onclick="createOrder()">Create Order</button>
+            <button class="ghost" onclick="clearItems()">Clear</button>
+            <div style="margin-left:auto" class="muted">Total: <span id="orderTotal">$0.00</span></div>
+          </div>
+
+          <div style="margin-top:0.75rem">
+            <label>Response</label>
+            <div id="createResult" class="result">No requests yet</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 style="margin:0 0 0.5rem 0">Get / Cancel</h2>
+          <label>Order Id</label>
+          <div style="display:flex;gap:0.5rem">
+            <input id="getId" type="text" placeholder="Order Id (guid)" />
+            <button onclick="getOrder()">Get</button>
+            <button class="ghost" onclick="copyOrderId()">Copy</button>
+          </div>
+          <div style="margin-top:0.5rem">
+            <label>Cancel by Id</label>
+            <div style="display:flex;gap:0.5rem">
+              <input id="cancelId" type="text" placeholder="Order Id (guid)" />
+              <button onclick="cancelOrder()">Cancel</button>
+            </div>
+          </div>
+          <div style="margin-top:0.5rem">
+            <label>Get All (filter status)</label>
+            <div style="display:flex;gap:0.5rem;margin-top:0.25rem;align-items:center">
+              <select id="filterStatus">
+                <option value="">(any)</option>
+                <option value="Pending">Pending</option>
+                <option value="Processing">Processing</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+              <button onclick="getAll()">Get All</button>
+              <button class="ghost" onclick="autoRefreshToggle()" id="autoBtn">Auto Refresh: Off</button>
+            </div>
+          </div>
+
+          <div style="margin-top:0.75rem">
+            <label>Result</label>
+            <div id="getResult" class="result">—</div>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card">
+          <h3 style="margin-top:0">Quick tips</h3>
+          <ul class="muted">
+            <li>Create an order by choosing a product, qty and price then click Add → Create Order.</li>
+            <li>Orders start as Pending; background processor updates to Processing every few minutes.</li>
+            <li>Use the Get All list to monitor statuses.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-top:1rem">
+          <h3 style="margin-top:0">Last Activity</h3>
+          <div id="activity" class="muted">No activity yet</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+<script>
+const baseUrl = '';
+let items = [];
+let autoRefresh = false;
+let autoTimer = null;
+
+const productSelect = document.getElementById('productSelect');
+const priceInput = document.getElementById('price');
+const qtyInput = document.getElementById('qty');
+const itemsTableBody = document.querySelector('#itemsTable tbody');
+const orderTotalEl = document.getElementById('orderTotal');
+const activityEl = document.getElementById('activity');
+
+function parseProductValue(val){ const [name, price] = val.split('|'); return { name, price: parseFloat(price) } }
+
+productSelect.addEventListener('change', ()=>{
+  const p = parseProductValue(productSelect.value);
+  priceInput.value = p.price.toFixed(2);
+});
+
+function renderItems(){
+  itemsTableBody.innerHTML = '';
+  let total = 0;
+  items.forEach((it, idx)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${escapeHtml(it.productName)}</td><td>${it.quantity}</td><td>$${it.unitPrice.toFixed(2)}</td><td><button class=\"ghost\" onclick=\"removeItem(${idx})\">Remove</button></td>`;
+    itemsTableBody.appendChild(tr);
+    total += it.quantity * it.unitPrice;
+  });
+  orderTotalEl.textContent = `$${total.toFixed(2)}`;
+}
+
+function addItem(){
+  const sel = parseProductValue(productSelect.value);
+  const qty = Math.max(1, parseInt(qtyInput.value) || 1);
+  const price = parseFloat(priceInput.value) || sel.price;
+  // If the same product already exists in the items list, update its quantity
+  const existing = items.find(i => i.productName === sel.name);
+  if (existing) {
+    existing.quantity = Number(existing.quantity) + Number(qty);
+  } else {
+    items.push({ productName: sel.name, quantity: qty, unitPrice: price });
+  }
+  renderItems();
+}
+
+function removeItem(i){ items.splice(i,1); renderItems(); }
+
+function clearItems(){ items = []; renderItems(); }
+
+async function createOrder(){
+  if (items.length === 0) return alert('Add at least one item');
+  const email = document.getElementById('email').value.trim();
+  if (!email) return alert('Enter email');
+  const payload = { items, email };
+  try{
+    const res = await fetch(baseUrl + '/api/orders', { method:'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify(payload) });
+    // Read body as text once then try to parse JSON. Avoid calling res.json() and res.text() which would read the stream twice.
+    const raw = await res.text();
+    let data = null;
+    try { data = JSON.parse(raw); } catch { /* not JSON */ }
+    document.getElementById('createResult').textContent = `Status: ${res.status}\n${data ? JSON.stringify(data, null, 2) : raw}`;
+    activityEl.textContent = `Created order — status ${data?.status ?? 'unknown'} id ${data?.id ?? ''}`;
+    // populate getId and cancelId for convenience
+    if (data?.id) { document.getElementById('getId').value = data.id; document.getElementById('cancelId').value = data.id }
+    // clear items and email after successful create
+    if (res.ok) { clearItems(); document.getElementById('email').value = ''; }
+  }catch(e){ document.getElementById('createResult').textContent = String(e); }
+}
+
+async function getOrder(){
+  const id = document.getElementById('getId').value.trim();
+  if (!id) return alert('Enter id');
+  try{
+    const res = await fetch(baseUrl + `/api/orders/${id}`);
+    const raw = await res.text();
+    document.getElementById('getResult').textContent = `Status: ${res.status}\n${formatJson(raw)}`;
+    activityEl.textContent = `Fetched order ${id}`;
+  }catch(e){ document.getElementById('getResult').textContent = String(e); }
+}
+
+async function getAll(){
+  const status = document.getElementById('filterStatus').value;
+  const qs = status ? `?status=${encodeURIComponent(status)}` : '';
+  try{
+    const res = await fetch(baseUrl + `/api/orders${qs}`);
+    const raw = await res.text();
+    document.getElementById('getResult').textContent = `Status: ${res.status}\n${formatJson(raw)}`;
+    activityEl.textContent = `Listed orders${status ? ' status='+status : ''}`;
+  }catch(e){ document.getElementById('getResult').textContent = String(e); }
+}
+
+async function cancelOrder(){
+  const id = document.getElementById('cancelId').value.trim();
+  if (!id) return alert('Enter id');
+  try{
+    const res = await fetch(baseUrl + `/api/orders/${id}`, { method:'DELETE' });
+    document.getElementById('getResult').textContent = `Cancel status: ${res.status}`;
+    activityEl.textContent = `Cancel attempted for ${id} -> ${res.status}`;
+  }catch(e){ document.getElementById('getResult').textContent = String(e); }
+}
+
+function autoRefreshToggle(){ autoRefresh = !autoRefresh; document.getElementById('autoBtn').textContent = `Auto Refresh: ${autoRefresh ? 'On' : 'Off'}`; if(autoRefresh) startAuto(); else stopAuto(); }
+function startAuto(){ autoTimer = setInterval(()=>{ getAll(); }, 5000); }
+function stopAuto(){ clearInterval(autoTimer); autoTimer = null; }
+
+function copyOrderId(){ const v = document.getElementById('getId').value.trim(); if (v) navigator.clipboard.writeText(v); }
+
+function formatJson(text){ try{ const j = JSON.parse(text); return JSON.stringify(j, null, 2); }catch{ return text; } }
+
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, (s)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" })[s]); }
+
+// initialize
+productSelect.dispatchEvent(new Event('change'));
+renderItems();
+</script>
+</body>
+</html>

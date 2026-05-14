@@ -45,6 +45,7 @@ public class OrderCreatedConsumer : IConsumer<OrderCreatedEvent>
         if (order != null && order.Status == OrderStatus.Pending)
         {
             order.Status = OrderStatus.Processing;
+            order.StatusUpdatedAtUtc = DateTime.UtcNow;
         }
 
         db.ProcessedMessages.Add(new ProcessedMessage { Id = messageId, ProcessedAtUtc = DateTime.UtcNow });

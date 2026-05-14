@@ -60,6 +60,26 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
                                 logger.LogWarning("Failed to deserialize outbox payload for message {MessageId}", msg.Id);
                             }
                         }
+                        else if (msg.EventType == nameof(OrderStatusUpdatedEvent))
+                        {
+                            var evt2 = JsonSerializer.Deserialize<OrderStatusUpdatedEvent>(msg.Payload);
+                            if (evt2 != null)
+                            {
+                                var queueName2 = Environment.GetEnvironmentVariable("RABBITMQ_QUEUE_STATUS")
+                                    ?? config?["RabbitMq:QueueStatus"]
+                                    ?? "order-status-updates";
+
+                                var sendEndpoint2 = await bus.GetSendEndpoint(new Uri($"queue:{queueName2}"));
+                                await sendEndpoint2.Send<OrderStatusUpdatedEvent>(evt2, sendContext =>
+                                {
+                                    sendContext.MessageId = msg.Id;
+                                }, stoppingToken);
+                            }
+                            else
+                            {
+                                logger.LogWarning("Failed to deserialize outbox payload for status message {MessageId}", msg.Id);
+                            }
+                        }
                         else
                         {
                             logger.LogDebug("Skipping unknown event type {EventType} for message {MessageId}", msg.EventType, msg.Id);

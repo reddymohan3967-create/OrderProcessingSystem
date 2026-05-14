@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OrderService.Data;
+using MassTransit;
+using Shared.Contracts.Events;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Shared.Contracts.Enums;
@@ -15,6 +17,7 @@ public class OrderProcessingBatcher : IAsyncDisposable
 {
     private readonly ConcurrentQueue<Guid> _queue = new();
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly IPublishEndpoint _publishEndpoint;
     private readonly ILogger<OrderProcessingBatcher> _logger;
     private readonly CancellationTokenSource _cts = new();
     private readonly Task _worker;
@@ -22,10 +25,11 @@ public class OrderProcessingBatcher : IAsyncDisposable
     private readonly int _batchSize;
     private readonly SemaphoreSlim _signal = new(0);
 
-    public OrderProcessingBatcher(IServiceScopeFactory scopeFactory, ILogger<OrderProcessingBatcher> logger, IConfiguration config)
+    public OrderProcessingBatcher(IServiceScopeFactory scopeFactory, ILogger<OrderProcessingBatcher> logger, IConfiguration config, IPublishEndpoint publishEndpoint)
     {
         _scopeFactory = scopeFactory;
         _logger = logger;
+        _publishEndpoint = publishEndpoint;
 
         var minutes = 5;
         var batchSize = 50;
@@ -143,12 +147,16 @@ public class OrderProcessingBatcher : IAsyncDisposable
                 var orders = await db.Orders.Where(o => distinctIds.Contains(o.Id)).ToListAsync(token);
 
                 var updated = 0;
+                var toNotify = new List<(Guid OrderId, OrderStatus OldStatus)>();
                 foreach (var order in orders)
                 {
                     if (order.Status == OrderStatus.Pending)
                     {
+                        var old = order.Status;
                         order.Status = OrderStatus.Processing;
+                        order.StatusUpdatedAtUtc = DateTime.UtcNow;
                         updated++;
+                        toNotify.Add((order.Id, old));
                     }
                 }
 
@@ -162,10 +170,33 @@ public class OrderProcessingBatcher : IAsyncDisposable
                 if (updated > 0 || pendingWorks.Count > 0)
                 {
                     await db.SaveChangesAsync(token);
+
                     if (updated > 0)
                         _logger.LogInformation("Batcher updated {Count} orders to Processing", updated);
                     if (pendingWorks.Count > 0)
                         _logger.LogInformation("Batcher removed {Count} PendingWork rows", pendingWorks.Count);
+
+                    // Publish OrderStatusUpdatedEvent for each updated order so downstream
+                    // services (notifications, audits) can react. Fire-and-forget publish.
+                foreach (var n in toNotify)
+                    {
+                        try
+                        {
+                            var ord = orders.FirstOrDefault(o => o.Id == n.OrderId);
+                            await _publishEndpoint.Publish(new OrderStatusUpdatedEvent
+                            {
+                                OrderId = n.OrderId,
+                                OldStatus = n.OldStatus,
+                                NewStatus = OrderStatus.Processing,
+                                UpdatedAtUtc = ord?.StatusUpdatedAtUtc ?? DateTime.UtcNow,
+                                Email = ord?.Email ?? string.Empty
+                            }, token);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "Failed to publish OrderStatusUpdatedEvent for OrderId {OrderId}", n.OrderId);
+                        }
+                    }
                 }
 
                 buffer.Clear();

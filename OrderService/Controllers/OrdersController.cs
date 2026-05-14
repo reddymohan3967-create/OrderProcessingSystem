@@ -12,6 +12,9 @@ public class OrdersController(IOrderService orderService) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<OrderResponse>> CreateOrder(CreateOrderRequest request)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         var result = await orderService.CreateOrderAsync(request);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }

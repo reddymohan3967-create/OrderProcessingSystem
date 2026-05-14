@@ -5,7 +5,12 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "Development"
+        "DOTNET_ENVIRONMENT": "Development",
+        "ORDERS_DB_PATH": "%LOCALAPPDATA%\\OrderProcessing\\Orders.db",
+        "Smtp__Host": "localhost",
+        "Smtp__Port": "1025",
+        "Smtp__UseStartTls": "false",
+        "Smtp__From": "dev@example.com"
       }
     }
   }

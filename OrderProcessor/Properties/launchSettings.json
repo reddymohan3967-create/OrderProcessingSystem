@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "OrderProcessor": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    ,
+    "Smtp__Host": "localhost",
+    "Smtp__Port": "1025",
+    "Smtp__UseStartTls": "false",
+    "Smtp__From": "dev@example.com"
+    }
+  }
+}

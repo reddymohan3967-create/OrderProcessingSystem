@@ -21,6 +21,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             entity.Property(o => o.TotalAmount)
                   .HasPrecision(18, 2);
 
+            entity.Property(o => o.Email)
+                  .IsRequired()
+                  .HasMaxLength(255);
+
             entity.HasMany(o => o.Items)
                   .WithOne(i => i.Order)
                   .HasForeignKey(i => i.OrderId)

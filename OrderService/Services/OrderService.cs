@@ -31,7 +31,9 @@ public class OrderService : IOrderService
             Id = Guid.NewGuid(),
             CreatedAtUtc = DateTime.UtcNow,
             Status = OrderStatus.Pending,
+            StatusUpdatedAtUtc = DateTime.UtcNow,
             TotalAmount = request.Items.Sum(i => i.Quantity * i.UnitPrice),
+            Email = request.Email,
             Items = request.Items.Select(item => new OrderItem
             {
                 Id = Guid.NewGuid(),
@@ -121,6 +123,7 @@ public class OrderService : IOrderService
             CreatedAtUtc = order.CreatedAtUtc,
             Status = order.Status,
             TotalAmount = order.TotalAmount,
+            Email = order.Email,
             Items = order.Items.Select(i => new OrderItemDto
             {
                 ProductName = i.ProductName,

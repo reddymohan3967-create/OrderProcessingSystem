@@ -1,33 +1,19 @@
-using OrderCreated;
 using MassTransit;
-using Shared.Contracts.Events;
 using Microsoft.EntityFrameworkCore;
+using OrderCreated;
 using OrderService.Data;
-using Microsoft.Extensions.DependencyInjection;
+using OrderService.Utils;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-// Resolve connection string similarly to the API so configuration can provide relative paths
-string ResolveSqliteConnectionString(string? connectionString, string contentRoot)
+// Resolve connection string using the shared DbResolver so all projects point to the same DB location.
+// Resolve DB path using DI-friendly logger once host services are available
+builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 {
-    if (string.IsNullOrEmpty(connectionString))
-        throw new InvalidOperationException("DefaultConnection is not configured.");
-
-    const string prefix = "Data Source=";
-    if (!connectionString.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-        return connectionString;
-
-    var path = connectionString[prefix.Length..].Trim();
-    if (Path.IsPathRooted(path))
-        return connectionString;
-
-    var resolved = Path.GetFullPath(Path.Combine(contentRoot, path));
-    return $"Data Source={resolved}";
-}
-
-var resolvedConn = ResolveSqliteConnectionString(builder.Configuration.GetConnectionString("DefaultConnection"), builder.Environment.ContentRootPath);
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(resolvedConn));
+    var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+    var cs = DbResolver.ResolveSqliteConnectionString(builder.Configuration, builder.Configuration.GetConnectionString("DefaultConnection"), builder.Environment.ContentRootPath, logger, allowPrepare: false);
+    options.UseSqlite(cs);
+});
 
 // read config
 var rabbitCfg = builder.Configuration.GetSection("RabbitMq");

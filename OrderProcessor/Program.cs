@@ -1,40 +1,26 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using OrderService.Data;
 using OrderProcessor;
-using Microsoft.Extensions.DependencyInjection;
-using Shared.Contracts.Events;
+using OrderService.Data;
+using Microsoft.Extensions.Logging;
+using OrderService.Utils;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-string ResolveSqliteConnectionString(string? connectionString, string contentRoot)
+// Register DbContext using DI so DbResolver can use the application's ILogger.
+builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 {
-    if (string.IsNullOrEmpty(connectionString))
-        throw new InvalidOperationException("DefaultConnection is not configured.");
-
-    const string prefix = "Data Source=";
-    if (!connectionString.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-        return connectionString;
-
-    var path = connectionString[prefix.Length..].Trim();
-    if (Path.IsPathRooted(path))
-        return connectionString;
-
-    var resolved = Path.GetFullPath(Path.Combine(contentRoot, path));
-    return $"Data Source={resolved}";
-}
-
-var resolvedConn = ResolveSqliteConnectionString(builder.Configuration.GetConnectionString("DefaultConnection"), builder.Environment.ContentRootPath);
-// Print resolved connection so we can verify the exact DB file used at runtime
-Console.WriteLine($"Using SQLite connection: {resolvedConn}");
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(resolvedConn));
+    var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+    var cs = DbResolver.ResolveSqliteConnectionString(builder.Configuration, builder.Configuration.GetConnectionString("DefaultConnection"), builder.Environment.ContentRootPath, logger, allowPrepare: false);
+    options.UseSqlite(cs);
+});
 
 var rabbitCfg = builder.Configuration.GetSection("RabbitMq");
 
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<OrderCreatedConsumer>();
+    // Ensure MassTransit publish endpoint is available for the batcher
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -57,6 +43,8 @@ builder.Services.AddMassTransit(x =>
 
 // Register batcher for DB updates
 builder.Services.AddSingleton<OrderProcessingBatcher>();
+// Register status advancer service to move Processing->Shipped->Delivered
+builder.Services.AddHostedService<OrderStatusAdvancerService>();
 // Register cleanup service for processed message dedup table
 builder.Services.AddHostedService<ProcessedMessagesCleanupService>();
 // Allow cleanup config from appsettings
@@ -80,5 +68,10 @@ using (var scope = host.Services.CreateScope())
         db.Database.EnsureCreated();
     }
 }
+
+// Ensure the OrderProcessingBatcher singleton is resolved so it starts its internal worker.
+// The batcher starts its background loop in the constructor; resolving it here guarantees
+// it will run even if no other component explicitly depends on it.
+_ = host.Services.GetRequiredService<OrderProcessingBatcher>();
 
 host.Run();
