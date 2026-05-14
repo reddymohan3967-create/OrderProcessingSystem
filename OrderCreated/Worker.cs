@@ -28,12 +28,13 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
                     .Take(20)
                     .ToListAsync(stoppingToken);
 
-                logger.LogInformation("Outbox worker found {Count} pending messages (DB: {DataSource})", pending.Count, db.Database.GetDbConnection().DataSource);
+                // Minimal logging: only note when there are messages to publish
+                if (pending.Count > 0)
+                    logger.LogInformation("Outbox worker publishing {Count} pending messages", pending.Count);
 
                 foreach (var msg in pending)
                 {
-                    logger.LogInformation("Processing outbox message {MessageId} ({EventType})", msg.Id, msg.EventType);
-                    logger.LogDebug("Outbox payload for {MessageId}: {Payload}", msg.Id, msg.Payload);
+                    // attempt publish for each pending outbox message
                     try
                     {
                         // Deserialize and publish typed event
@@ -54,6 +55,20 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
                                 {
                                     sendContext.MessageId = msg.Id;
                                 }, stoppingToken);
+
+                                // Mark this message as published and persist immediately.
+                                msg.PublishedAtUtc = DateTime.UtcNow;
+                                msg.Error = null;
+                                try
+                                {
+                                    await db.SaveChangesAsync(stoppingToken);
+                                }
+                                catch (Exception ex)
+                                {
+                                    // Only warn on failure to persist the flag
+                                    logger.LogWarning(ex, "Failed to persist PublishedAtUtc for message {MessageId}", msg.Id);
+                                }
+                                continue;
                             }
                             else
                             {
@@ -82,42 +97,8 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
                         }
                         else
                         {
-                            logger.LogDebug("Skipping unknown event type {EventType} for message {MessageId}", msg.EventType, msg.Id);
+                            // unknown event type - ignore
                         }
-
-                        msg.PublishedAtUtc = DateTime.UtcNow;
-                        msg.Error = null;
-
-                        // Published successfully; append a lightweight publish log entry if configured
-                        try
-                        {
-                            var publishLogPath = Environment.GetEnvironmentVariable("PUBLISH_LOG_PATH")
-                                ?? config?["PublishLogPath"];
-
-                            if (!string.IsNullOrEmpty(publishLogPath))
-                            {
-                                var resolvedLogFile = Path.IsPathRooted(publishLogPath)
-                                    ? publishLogPath
-                                    : Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, publishLogPath));
-
-                                Directory.CreateDirectory(Path.GetDirectoryName(resolvedLogFile)!);
-                                var publishEntry = new
-                                {
-                                    MessageId = msg.Id,
-                                    EventType = msg.EventType,
-                                    PublishedAtUtc = msg.PublishedAtUtc
-                                };
-
-                                var line = JsonSerializer.Serialize(publishEntry);
-                                await File.AppendAllTextAsync(resolvedLogFile, line + Environment.NewLine, stoppingToken);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.LogWarning(ex, "Failed to write publish log for outbox message {MessageId}", msg.Id);
-                        }
-
-                        logger.LogInformation("Published outbox message {MessageId} ({EventType})", msg.Id, msg.EventType);
                     }
                     catch (Exception ex)
                     {

@@ -1,11 +1,13 @@
-using MassTransit;
-using Shared.Contracts.Events;
-using OrderService.Data;
-using Microsoft.EntityFrameworkCore;
-using Shared.Contracts.Enums;
-using OrderService.Entities;
-using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using OrderService.Data;
+using OrderService.Entities;
+using Shared.Contracts.Enums;
+using Shared.Contracts.Events;
 
 namespace OrderProcessor;
 

@@ -6,7 +6,4 @@
     <Project Path="OrderService/OrderService.csproj" />
     <Project Path="Shared.Contracts/Shared.Contracts.csproj" />
   </Folder>
-  <Folder Name="/tests/">
-    <Project Path="OrderService.Tests/OrderService.Tests.csproj" />
-  </Folder>
 </Solution>

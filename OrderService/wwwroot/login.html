@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login — OrderService</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+    <div class="container" style="max-width:480px">
+        <h3>Sign in</h3>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label class="form-label">Username or Email</label>
+                <input id="userOrEmail" type="text" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input id="password" type="password" class="form-control" required />
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary">Sign in</button>
+                <a href="/" class="btn btn-outline-secondary">Back</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+
+        async function login(e) {
+
+            e.preventDefault();
+
+            const userOrEmail = document.getElementById('userOrEmail').value;
+            const password = document.getElementById('password').value;
+
+            try {
+
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userOrEmail, password })
+                });
+
+                if (res.ok) {
+                    // Save basic auth credentials in sessionStorage so the SPA can include
+                    // the Authorization header on subsequent requests.
+                    const authHeader = 'Basic ' + btoa(userOrEmail + ':' + password);
+                    try { sessionStorage.setItem('basicAuth', authHeader); } catch (e) { /* ignore */ }
+
+                    // On successful login navigate to the main app page seamlessly.
+                    // Use replace so the login page isn't kept in the history.
+                    window.location.replace('/index.html');
+                }
+                else { alert('Login failed'); }
+
+            } catch (err) { alert('Login failed'); }
+        }
+        document.getElementById('loginForm').addEventListener('submit', login);
+    </script>
+</body>
+</html>

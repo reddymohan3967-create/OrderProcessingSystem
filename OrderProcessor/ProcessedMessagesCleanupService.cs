@@ -1,10 +1,12 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using OrderService.Data;
-using System.Threading.Tasks;
-using System.Threading;
+using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using OrderService.Data;
 
 namespace OrderProcessor;
 

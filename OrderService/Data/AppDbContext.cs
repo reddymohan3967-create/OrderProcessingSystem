@@ -11,6 +11,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
     public DbSet<ProcessedMessage> ProcessedMessages => Set<ProcessedMessage>();
     public DbSet<PendingWork> PendingWork => Set<PendingWork>();
+    public DbSet<Entities.Product> Products => Set<Entities.Product>();
+    public DbSet<Entities.AppUser> AppUsers => Set<Entities.AppUser>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

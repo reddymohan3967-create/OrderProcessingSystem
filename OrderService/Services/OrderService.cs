@@ -115,6 +115,36 @@ public class OrderService : IOrderService
         return true;
     }
 
+    public async Task<bool> UpdateOrderStatusAsync(Guid id, OrderStatus newStatus, bool force = false)
+    {
+        var order = await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
+        if (order is null) return false;
+
+        if (!force)
+        {
+            // Simple validation: allow only forward transitions in common flow
+            // Pending -> Processing -> Shipped -> Delivered
+            var allowed = (order.Status, newStatus) switch
+            {
+                (OrderStatus.Pending, OrderStatus.Processing) => true,
+                (OrderStatus.Processing, OrderStatus.Shipped) => true,
+                (OrderStatus.Shipped, OrderStatus.Delivered) => true,
+                // allow cancelling from Pending
+                (OrderStatus.Pending, OrderStatus.Cancelled) => true,
+                _ => false
+            };
+
+            if (!allowed)
+                throw new InvalidOperationException($"Invalid status transition from {order.Status} to {newStatus}");
+        }
+
+        order.Status = newStatus;
+        order.StatusUpdatedAtUtc = DateTime.UtcNow;
+        await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
+
     private static OrderResponse MapToResponse(Order order)
     {
         return new OrderResponse

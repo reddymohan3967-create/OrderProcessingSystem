@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using OrderService.Data;
-using MassTransit;
-using Shared.Contracts.Events;
-using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using MassTransit;
+using OrderService.Data;
+using Shared.Contracts.Events;
 using Shared.Contracts.Enums;
 
 namespace OrderProcessor;
