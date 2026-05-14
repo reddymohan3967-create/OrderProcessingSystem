@@ -3,24 +3,99 @@
   "WorkspaceRootPath": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E5FD7B84-1A20-8C1E-B847-7317D418200E}|BackgroundWorker\\BackgroundWorker.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\backgroundworker\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{E5FD7B84-1A20-8C1E-B847-7317D418200E}|BackgroundWorker\\BackgroundWorker.csproj|solutionrelative:backgroundworker\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\ClearDb\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tools\\ClearDb\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E5FD7B84-1A20-8C1E-B847-7317D418200E}|BackgroundWorker\\BackgroundWorker.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\backgroundworker\\worker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E5FD7B84-1A20-8C1E-B847-7317D418200E}|BackgroundWorker\\BackgroundWorker.csproj|solutionrelative:backgroundworker\\worker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\ClearDb\\ClearDb.csproj||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tools\\ClearDb\\ClearDb.csproj||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E5FD7B84-1A20-8C1E-B847-7317D418200E}|BackgroundWorker\\BackgroundWorker.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\backgroundworker\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E5FD7B84-1A20-8C1E-B847-7317D418200E}|BackgroundWorker\\BackgroundWorker.csproj|solutionrelative:backgroundworker\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0288CA01-7BAB-2761-1E65-8139AFEA16AA}|OrderProcessor\\OrderProcessor.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderprocessor\\orderprocessingbatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0288CA01-7BAB-2761-1E65-8139AFEA16AA}|OrderProcessor\\OrderProcessor.csproj|solutionrelative:orderprocessor\\orderprocessingbatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0288CA01-7BAB-2761-1E65-8139AFEA16AA}|OrderProcessor\\OrderProcessor.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderprocessor\\ordercreatedconsumer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0288CA01-7BAB-2761-1E65-8139AFEA16AA}|OrderProcessor\\OrderProcessor.csproj|solutionrelative:orderprocessor\\ordercreatedconsumer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\entities\\pendingwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\entities\\pendingwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\EnsureProcessedMessages\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tools\\EnsureProcessedMessages\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\CheckDb\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tools\\CheckDb\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\CheckDb\\CheckDb.csproj||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tools\\CheckDb\\CheckDb.csproj||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\EnsureProcessedMessages\\EnsureProcessedMessages.csproj||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tools\\EnsureProcessedMessages\\EnsureProcessedMessages.csproj||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0288CA01-7BAB-2761-1E65-8139AFEA16AA}|OrderProcessor\\OrderProcessor.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderprocessor\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0288CA01-7BAB-2761-1E65-8139AFEA16AA}|OrderProcessor\\OrderProcessor.csproj|solutionrelative:orderprocessor\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0288CA01-7BAB-2761-1E65-8139AFEA16AA}|OrderProcessor\\OrderProcessor.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderprocessor\\orderprocessor.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{0288CA01-7BAB-2761-1E65-8139AFEA16AA}|OrderProcessor\\OrderProcessor.csproj|solutionrelative:orderprocessor\\orderprocessor.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\Requeue-OrderCreatedError.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tools\\Requeue-OrderCreatedError.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\migrations\\appdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\migrations\\appdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\migrations\\20260514123000_addprocessedmessagesttlcleanup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\migrations\\20260514123000_addprocessedmessagesttlcleanup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0288CA01-7BAB-2761-1E65-8139AFEA16AA}|OrderProcessor\\OrderProcessor.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderprocessor\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{0288CA01-7BAB-2761-1E65-8139AFEA16AA}|OrderProcessor\\OrderProcessor.csproj|solutionrelative:orderprocessor\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0288CA01-7BAB-2761-1E65-8139AFEA16AA}|OrderProcessor\\OrderProcessor.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderprocessor\\processedmessagescleanupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0288CA01-7BAB-2761-1E65-8139AFEA16AA}|OrderProcessor\\OrderProcessor.csproj|solutionrelative:orderprocessor\\processedmessagescleanupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\migrations\\20260513105742_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\migrations\\20260513105742_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{09380188-635A-EFC2-A2E0-13C4BEF871E7}|OrderCreated\\OrderCreated.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\ordercreated\\worker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{09380188-635A-EFC2-A2E0-13C4BEF871E7}|OrderCreated\\OrderCreated.csproj|solutionrelative:ordercreated\\worker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\entities\\processedmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\entities\\processedmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\DbQuery\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -39,20 +114,12 @@
       "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E5FD7B84-1A20-8C1E-B847-7317D418200E}|BackgroundWorker\\BackgroundWorker.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\backgroundworker\\backgroundworker.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{E5FD7B84-1A20-8C1E-B847-7317D418200E}|BackgroundWorker\\BackgroundWorker.csproj|solutionrelative:backgroundworker\\backgroundworker.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{5928C49F-05F0-B890-F378-C867DCE25B20}|Shared.Contracts\\Shared.Contracts.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\shared.contracts\\shared.contracts.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{5928C49F-05F0-B890-F378-C867DCE25B20}|Shared.Contracts\\Shared.Contracts.csproj|solutionrelative:shared.contracts\\shared.contracts.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\services\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\services\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\migrations\\20260513105742_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\migrations\\20260513105742_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -65,14 +132,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\orderservice.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\orderservice.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\migrations\\appdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\migrations\\appdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\entities\\outboxmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -113,6 +172,25 @@
     {
       "AbsoluteMoniker": "D:0:0:{03F2419A-7C18-ED54-9634-23F41072AFF2}|OrderService.Tests\\OrderService.Tests.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice.tests\\unittest1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{03F2419A-7C18-ED54-9634-23F41072AFF2}|OrderService.Tests\\OrderService.Tests.csproj|solutionrelative:orderservice.tests\\unittest1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:BackgroundWorker\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:BackgroundWorker\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\Properties\\launchSettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:BackgroundWorker\\Properties\\launchSettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\LENOVO\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\-527666636\\BackgroundWorker.csproj.FileListAbsolute.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|c:\\users\\lenovo\\source\\repos\\orderprocessingsystem\\orderprocessingsystem\\orderservice\\migrations\\20260514120000_addprocessedmessagesuniqueindex.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6BCC5D4C-DCFD-F350-0302-6CEEC93FCB6D}|OrderService\\OrderService.csproj|solutionrelative:orderservice\\migrations\\20260514120000_addprocessedmessagesuniqueindex.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -127,32 +205,345 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\appsettings.json",
-              "RelativeDocumentMoniker": "BackgroundWorker\\appsettings.json",
-              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\appsettings.json",
-              "RelativeToolTip": "BackgroundWorker\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-13T13:57:43.468Z",
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\.gitignore",
+              "RelativeDocumentMoniker": ".gitignore",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\.gitignore",
+              "RelativeToolTip": ".gitignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAuAAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHgSURBVEhLtZVdTsJAFIWroTyDK3ELJuCbsA1ZhQRFRETkV6yV8AAsgAI\u002BugW3wAr0RUop7Tj3dmagtLXFhJOc3mEynXu\u002BSWmlg4oQcsSGqOFwSKcIzAcY7rFZdeZkWf42DOMsl7v8ZNsEazAYEMuyXF5zr7nXWG3bJqPRiMznc6Kqb1\u002BtdueUbePSMasoSASiN0sW2AJbwrSRMKwBJZNJKZVOJeJx\u002BaPRbHma\u002BDbAqzOMpBPa5DydxiZsSijGKoo30MZjrH8pm81iVRQFKygmxxNs6K9\u002Bv4/nvlqZ1CticBuOl8IGWS4NogsviWmuSe2p7uH2EMAKTQsn2FUmkxUnEKher4dPjH9ymjogva47BNXHWhgBXCRpomnOxB6KRKCqKhJsznoneUD6BSOoPFSjEUwnByJQlFf8l7rTO6ndyalZcm7TNEn5vhJG4CD8h\u002BAikwkn6HZf8F3jSSu8OfNt/yx0sqIEpbtyOAGsmE4nzsQeikTQ7jwTkxKItCyxX2qenBsIirelcAJAmB2KoNlq4/Psl1Z4K/UuQeGmGIGA6n02xbqPgIBuwH4FqN5o4vMMKYOSBhkI8oVrTwfPBwdWxOQYWt7D/P5duT768D7HJhFtU9MBVj5XyF\u002B59jywJOkX7ucXnGOxDX8AAAAASUVORK5CYII=",
+              "WhenOpened": "2026-05-14T05:21:53.861Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\ClearDb\\Program.cs",
+              "RelativeDocumentMoniker": "tools\\ClearDb\\Program.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\ClearDb\\Program.cs",
+              "RelativeToolTip": "tools\\ClearDb\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAswBIAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T05:07:16.776Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Worker.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\Worker.cs",
-              "RelativeDocumentMoniker": "BackgroundWorker\\Worker.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\Worker.cs",
-              "RelativeToolTip": "BackgroundWorker\\Worker.cs",
-              "ViewState": "AgIAADgAAAAAAAAAAAAvwEUAAAAdAAAAAAAAAA==",
+              "Title": "ClearDb.csproj",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\ClearDb\\ClearDb.csproj",
+              "RelativeDocumentMoniker": "tools\\ClearDb\\ClearDb.csproj",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\ClearDb\\ClearDb.csproj",
+              "RelativeToolTip": "tools\\ClearDb\\ClearDb.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-14T05:07:12.102Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PendingWork.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Entities\\PendingWork.cs",
+              "RelativeDocumentMoniker": "OrderService\\Entities\\PendingWork.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Entities\\PendingWork.cs",
+              "RelativeToolTip": "OrderService\\Entities\\PendingWork.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T13:57:15.929Z",
+              "WhenOpened": "2026-05-14T05:01:14.651Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "OrderProcessingBatcher.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderProcessor\\OrderProcessingBatcher.cs",
+              "RelativeDocumentMoniker": "OrderProcessor\\OrderProcessingBatcher.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderProcessor\\OrderProcessingBatcher.cs",
+              "RelativeToolTip": "OrderProcessor\\OrderProcessingBatcher.cs",
+              "ViewState": "AgIAAEYAAAAAAAAAAAAswFIAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T02:46:11.808Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "OrderService\\Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "OrderService\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAAmwAkAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-13T10:51:09.835Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "OrderCreatedConsumer.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderProcessor\\OrderCreatedConsumer.cs",
+              "RelativeDocumentMoniker": "OrderProcessor\\OrderCreatedConsumer.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderProcessor\\OrderCreatedConsumer.cs",
+              "RelativeToolTip": "OrderProcessor\\OrderCreatedConsumer.cs",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAswEUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T02:46:00.627Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\EnsureProcessedMessages\\Program.cs",
+              "RelativeDocumentMoniker": "tools\\EnsureProcessedMessages\\Program.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\EnsureProcessedMessages\\Program.cs",
+              "RelativeToolTip": "tools\\EnsureProcessedMessages\\Program.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAcwCcAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T03:55:55.735Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\CheckDb\\Program.cs",
+              "RelativeDocumentMoniker": "tools\\CheckDb\\Program.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\CheckDb\\Program.cs",
+              "RelativeToolTip": "tools\\CheckDb\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T04:02:28.806Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CheckDb.csproj",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\CheckDb\\CheckDb.csproj",
+              "RelativeDocumentMoniker": "tools\\CheckDb\\CheckDb.csproj",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\CheckDb\\CheckDb.csproj",
+              "RelativeToolTip": "tools\\CheckDb\\CheckDb.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-14T04:02:24.523Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "EnsureProcessedMessages.csproj",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\EnsureProcessedMessages\\EnsureProcessedMessages.csproj",
+              "RelativeDocumentMoniker": "tools\\EnsureProcessedMessages\\EnsureProcessedMessages.csproj",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\EnsureProcessedMessages\\EnsureProcessedMessages.csproj",
+              "RelativeToolTip": "tools\\EnsureProcessedMessages\\EnsureProcessedMessages.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-14T03:55:47.34Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "OrderProcessor",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderProcessor\\OrderProcessor.csproj",
+              "RelativeDocumentMoniker": "OrderProcessor\\OrderProcessor.csproj",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderProcessor\\OrderProcessor.csproj",
+              "RelativeToolTip": "OrderProcessor\\OrderProcessor.csproj",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-14T03:49:52.195Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Requeue-OrderCreatedError.ps1",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\Requeue-OrderCreatedError.ps1",
+              "RelativeDocumentMoniker": "tools\\Requeue-OrderCreatedError.ps1",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\Requeue-OrderCreatedError.ps1",
+              "RelativeToolTip": "tools\\Requeue-OrderCreatedError.ps1",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAOzSURBVEhLpZZLbBtVFIb/GcdJ45CEFqmKBM6iqHEqJXVVCRBLVrDIDlq6YUErsQN2sEshYlOpCx4rkGiLlA3qIhWkQQioI0SSKjExrmhwmzS1HeO3x47t8WNet\u002Bfejh1bpJFrPunXuT6e\u002Bc\u002Bcc\u002B84kUAEAgHGY6fMzc19OjMz8xUtCyRTJPeDsce\u002BvECnRMJhdnt5mU1PT39Ctz5HcgiTg3iaApz5\u002BXlRqJMish1FN52K4x4dxYXz5y9Skffp47OkfYs0C3RDJ0Wam\u002Bz1ekWiExYWFuzVHlNTU69QCJGKItEKL2Ca5lNLURQWpr0IBoN8bmdIzwvDFv7XiIaHh\u002BF2uzExMcE/DpCcfNFKV5u8n55Ecw8mJ8VTtGFZFn7\u002BxQfX4OBjI8pxUZoig8VFCZ4zTNNiTGKSJLF8Llu/cO7NZ7hHs4DdZhvhcASRjILR42MwyZQbZlWNTBkG\u002B3uFuUFrshavM6MoO2QEF2/hg3fOCO\u002BWPWg8354eRnfgHDqMtOzCttSPoHkIXwbSOD16FB/9HsVndxR8n5PwXZrhyr86rkZr0DQTsVisSgaClj34rzL5Aqo9/YjU6KaqiTipb8hFNzHcfOskouki/thKIlmuI12swajVEcsWkM\u002BkErbtwR2olgO5OsMOFdipGohVdMRp/dJsABINwHfOK0a2lStjM1tCWa0jkc5hN5NaJQPBgR1UHX2IawzxCjc3cK\u002BkI6wa\u002BPg1D3Sa9\u002BXVCBLFOnYUFam8ih5Dh15IQy3kfrRtn9xBIpEE3YKHuoyNoo61fB1La/dx4/UX8fYLA3hjdg3frkUxwjQ41AqcuoZByUIpX2CVUmmeO3JaOmg/16HtMHKGA34VuEtPvkkaO\u002BKCU2I4\u002Bc0Krp89jfX3XsUPZ0/hSI\u002BEilqDbhioKCnNt\u002Bhr/lw0j\u002BmJE\u002BMi0WD2xk\u002B4ZRxFyekSR5EfUYPGYpH4L5pF51ZidHYJmb7vpTgkG\u002BhbX4hd\u002B\u002BKSW3xB9NhRPHUrVU3Hh55eHBs5LIbGn4ReImg0it3CLgxqPpXK4NiYB3/6/XjZO4mlUBTXc5mAMLBp2YN2DHpdsyUVK/e2cZu0EtrG8j8P4N\u002BKIpTOY/Xv\u002B1gKbEDZLWF9YxN3o0nEMzmUC8pN20LQHNH4uEckGkx//jW9nYwuoEuoO6nRYVuntKaRSbKMWrWmVSvl8oM7/uO\u002B335V7Av2Cng8YyLRLS7XwLsUFklhkbARBYgR0ik7dkuS9JcdmzQKHCLxP3k8dkuNxP\u002BN4dEGeARCm\u002Bt1DHMFWgAAAABJRU5ErkJggg==",
+              "WhenOpened": "2026-05-14T03:38:14.153Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderProcessor\\Program.cs",
+              "RelativeDocumentMoniker": "OrderProcessor\\Program.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderProcessor\\Program.cs",
+              "RelativeToolTip": "OrderProcessor\\Program.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAAAwCIAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T02:44:54.229Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Microsoft.Common.CurrentVersion.targets",
+              "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "ViewState": "AgIAANwTAAAAAAAAAAAQwOoTAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2026-05-14T03:26:04.541Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "20260514123000_AddProcessedMessagesTtlCleanup.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Migrations\\20260514123000_AddProcessedMessagesTtlCleanup.cs",
+              "RelativeDocumentMoniker": "OrderService\\Migrations\\20260514123000_AddProcessedMessagesTtlCleanup.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Migrations\\20260514123000_AddProcessedMessagesTtlCleanup.cs",
+              "RelativeToolTip": "OrderService\\Migrations\\20260514123000_AddProcessedMessagesTtlCleanup.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T03:18:45.574Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderProcessor\\appsettings.json",
+              "RelativeDocumentMoniker": "OrderProcessor\\appsettings.json",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderProcessor\\appsettings.json",
+              "RelativeToolTip": "OrderProcessor\\appsettings.json",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAuwBYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-14T02:45:00.596Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "AppDbContextModelSnapshot.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Migrations\\AppDbContextModelSnapshot.cs",
+              "RelativeDocumentMoniker": "OrderService\\Migrations\\AppDbContextModelSnapshot.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Migrations\\AppDbContextModelSnapshot.cs",
+              "RelativeToolTip": "OrderService\\Migrations\\AppDbContextModelSnapshot.cs",
+              "ViewState": "AgIAAGIAAAAAAAAAAAAwwG8AAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-13T10:59:00.687Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "ProcessedMessagesCleanupService.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderProcessor\\ProcessedMessagesCleanupService.cs",
+              "RelativeDocumentMoniker": "OrderProcessor\\ProcessedMessagesCleanupService.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderProcessor\\ProcessedMessagesCleanupService.cs",
+              "RelativeToolTip": "OrderProcessor\\ProcessedMessagesCleanupService.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAEsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T03:15:43.377Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "20260514120000_AddProcessedMessagesUniqueIndex.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Migrations\\20260514120000_AddProcessedMessagesUniqueIndex.cs",
+              "RelativeDocumentMoniker": "OrderService\\Migrations\\20260514120000_AddProcessedMessagesUniqueIndex.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Migrations\\20260514120000_AddProcessedMessagesUniqueIndex.cs",
+              "RelativeToolTip": "OrderService\\Migrations\\20260514120000_AddProcessedMessagesUniqueIndex.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T03:17:34.809Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "20260513105742_InitialCreate.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Migrations\\20260513105742_InitialCreate.cs",
+              "RelativeDocumentMoniker": "OrderService\\Migrations\\20260513105742_InitialCreate.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Migrations\\20260513105742_InitialCreate.cs",
+              "RelativeToolTip": "OrderService\\Migrations\\20260513105742_InitialCreate.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAWwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-13T10:57:42.627Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Worker.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderCreated\\Worker.cs",
+              "RelativeDocumentMoniker": "OrderCreated\\Worker.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderCreated\\Worker.cs",
+              "RelativeToolTip": "OrderCreated\\Worker.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAewAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T03:10:08.269Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "ProcessedMessage.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Entities\\ProcessedMessage.cs",
+              "RelativeDocumentMoniker": "OrderService\\Entities\\ProcessedMessage.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Entities\\ProcessedMessage.cs",
+              "RelativeToolTip": "OrderService\\Entities\\ProcessedMessage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T03:09:44.631Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\Program.cs",
+              "RelativeDocumentMoniker": "BackgroundWorker\\Program.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\Program.cs",
+              "RelativeToolTip": "BackgroundWorker\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T03:07:56.183Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\appsettings.json",
+              "RelativeDocumentMoniker": "BackgroundWorker\\appsettings.json",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\appsettings.json",
+              "RelativeToolTip": "BackgroundWorker\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-14T03:07:56.281Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "BackgroundWorker\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\Properties\\launchSettings.json",
+              "RelativeToolTip": "BackgroundWorker\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-14T03:07:56.406Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "BackgroundWorker.csproj.FileListAbsolute.txt",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\-527666636\\BackgroundWorker.csproj.FileListAbsolute.txt",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\-527666636\\BackgroundWorker.csproj.FileListAbsolute.txt",
+              "ToolTip": "C:\\Users\\LENOVO\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\-527666636\\BackgroundWorker.csproj.FileListAbsolute.txt",
+              "RelativeToolTip": "..\\..\\..\\..\\AppData\\Local\\Temp\\CopilotBaseline\\Deleted\\-527666636\\BackgroundWorker.csproj.FileListAbsolute.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2026-05-14T03:07:56.505Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Program.cs",
               "RelativeDocumentMoniker": "OrderService\\Program.cs",
@@ -160,25 +551,11 @@
               "RelativeToolTip": "OrderService\\Program.cs",
               "ViewState": "AgIAABMAAAAAAAAAAAAowDAAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:51:14.962Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T10:51:14.962Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\Program.cs",
-              "RelativeDocumentMoniker": "BackgroundWorker\\Program.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\Program.cs",
-              "RelativeToolTip": "BackgroundWorker\\Program.cs",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAADcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T13:56:48.758Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 23,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\appsettings.json",
               "RelativeDocumentMoniker": "OrderService\\appsettings.json",
@@ -186,12 +563,11 @@
               "RelativeToolTip": "OrderService\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-13T10:51:21.243Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T10:51:21.243Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 24,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\DbQuery\\Program.cs",
               "RelativeDocumentMoniker": "tools\\DbQuery\\Program.cs",
@@ -199,12 +575,11 @@
               "RelativeToolTip": "tools\\DbQuery\\Program.cs",
               "ViewState": "AgIAACsAAAAAAAAAAAAswD0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T15:31:08.889Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T15:31:08.889Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 25,
               "Title": "DbQuery.csproj",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\tools\\DbQuery\\DbQuery.csproj",
               "RelativeDocumentMoniker": "tools\\DbQuery\\DbQuery.csproj",
@@ -212,12 +587,11 @@
               "RelativeToolTip": "tools\\DbQuery\\DbQuery.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-05-13T15:31:04.254Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T15:31:04.254Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 26,
               "Title": "appsettings.Development.json",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\appsettings.Development.json",
               "RelativeDocumentMoniker": "OrderService\\appsettings.Development.json",
@@ -225,12 +599,11 @@
               "RelativeToolTip": "OrderService\\appsettings.Development.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-13T14:56:11.107Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T14:56:11.107Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 27,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "OrderService\\Properties\\launchSettings.json",
@@ -238,25 +611,11 @@
               "RelativeToolTip": "OrderService\\Properties\\launchSettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-13T11:30:45.653Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T11:30:45.653Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "BackgroundWorker.csproj",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\BackgroundWorker.csproj",
-              "RelativeDocumentMoniker": "BackgroundWorker\\BackgroundWorker.csproj",
-              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\BackgroundWorker\\BackgroundWorker.csproj",
-              "RelativeToolTip": "BackgroundWorker\\BackgroundWorker.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAowBYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-05-13T13:57:31.986Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 28,
               "Title": "Shared.Contracts.csproj",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\Shared.Contracts\\Shared.Contracts.csproj",
               "RelativeDocumentMoniker": "Shared.Contracts\\Shared.Contracts.csproj",
@@ -269,7 +628,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 30,
               "Title": "OrdersController.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Controllers\\OrdersController.cs",
               "RelativeDocumentMoniker": "OrderService\\Controllers\\OrdersController.cs",
@@ -277,12 +636,11 @@
               "RelativeToolTip": "OrderService\\Controllers\\OrdersController.cs",
               "ViewState": "AgIAACYAAAAAAAAAAAAWwCwAAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T11:36:44.352Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T11:36:44.352Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 29,
               "Title": "OrderService.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Services\\OrderService.cs",
               "RelativeDocumentMoniker": "OrderService\\Services\\OrderService.cs",
@@ -290,25 +648,11 @@
               "RelativeToolTip": "OrderService\\Services\\OrderService.cs",
               "ViewState": "AgIAAG8AAAAAAAAAAAAowDwAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T11:36:35.594Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T11:36:35.594Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "20260513105742_InitialCreate.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Migrations\\20260513105742_InitialCreate.cs",
-              "RelativeDocumentMoniker": "OrderService\\Migrations\\20260513105742_InitialCreate.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Migrations\\20260513105742_InitialCreate.cs",
-              "RelativeToolTip": "OrderService\\Migrations\\20260513105742_InitialCreate.cs",
-              "ViewState": "AgIAAEMAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:57:42.627Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 31,
               "Title": "IOrderService.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Interfaces\\IOrderService.cs",
               "RelativeDocumentMoniker": "OrderService\\Interfaces\\IOrderService.cs",
@@ -316,12 +660,11 @@
               "RelativeToolTip": "OrderService\\Interfaces\\IOrderService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T11:36:22.682Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T11:36:22.682Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 32,
               "Title": "OrderService.csproj",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\OrderService.csproj",
               "RelativeDocumentMoniker": "OrderService\\OrderService.csproj",
@@ -334,33 +677,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "AppDbContextModelSnapshot.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Migrations\\AppDbContextModelSnapshot.cs",
-              "RelativeDocumentMoniker": "OrderService\\Migrations\\AppDbContextModelSnapshot.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Migrations\\AppDbContextModelSnapshot.cs",
-              "RelativeToolTip": "OrderService\\Migrations\\AppDbContextModelSnapshot.cs",
-              "ViewState": "AgIAAGYAAAAAAAAAAIBZwAoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:59:00.687Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "AppDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Data\\AppDbContext.cs",
-              "RelativeDocumentMoniker": "OrderService\\Data\\AppDbContext.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Data\\AppDbContext.cs",
-              "RelativeToolTip": "OrderService\\Data\\AppDbContext.cs",
-              "ViewState": "AgIAACIAAAAAAAAAAAAkwAkAAAA7AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:51:09.835Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 33,
               "Title": "OutboxMessage.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Entities\\OutboxMessage.cs",
               "RelativeDocumentMoniker": "OrderService\\Entities\\OutboxMessage.cs",
@@ -368,12 +685,11 @@
               "RelativeToolTip": "OrderService\\Entities\\OutboxMessage.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:51:04.998Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T10:51:04.998Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 34,
               "Title": "OrderItem.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Entities\\OrderItem.cs",
               "RelativeDocumentMoniker": "OrderService\\Entities\\OrderItem.cs",
@@ -381,12 +697,11 @@
               "RelativeToolTip": "OrderService\\Entities\\OrderItem.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:51:00.869Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T10:51:00.869Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 35,
               "Title": "Order.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService\\Entities\\Order.cs",
               "RelativeDocumentMoniker": "OrderService\\Entities\\Order.cs",
@@ -394,12 +709,11 @@
               "RelativeToolTip": "OrderService\\Entities\\Order.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:50:56.487Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T10:50:56.487Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 36,
               "Title": "OrderResponse.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\Shared.Contracts\\DTOs\\OrderResponse.cs",
               "RelativeDocumentMoniker": "Shared.Contracts\\DTOs\\OrderResponse.cs",
@@ -407,12 +721,11 @@
               "RelativeToolTip": "Shared.Contracts\\DTOs\\OrderResponse.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:44:40.865Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T10:44:40.865Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 37,
               "Title": "CreateOrderRequest.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\Shared.Contracts\\DTOs\\CreateOrderRequest.cs",
               "RelativeDocumentMoniker": "Shared.Contracts\\DTOs\\CreateOrderRequest.cs",
@@ -420,12 +733,11 @@
               "RelativeToolTip": "Shared.Contracts\\DTOs\\CreateOrderRequest.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:44:37.417Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T10:44:37.417Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 38,
               "Title": "OrderItemDto.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\Shared.Contracts\\DTOs\\OrderItemDto.cs",
               "RelativeDocumentMoniker": "Shared.Contracts\\DTOs\\OrderItemDto.cs",
@@ -433,12 +745,11 @@
               "RelativeToolTip": "Shared.Contracts\\DTOs\\OrderItemDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:44:33.854Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T10:44:33.854Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 39,
               "Title": "OrderStatusUpdatedEvent.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\Shared.Contracts\\Events\\OrderStatusUpdatedEvent.cs",
               "RelativeDocumentMoniker": "Shared.Contracts\\Events\\OrderStatusUpdatedEvent.cs",
@@ -446,12 +757,11 @@
               "RelativeToolTip": "Shared.Contracts\\Events\\OrderStatusUpdatedEvent.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:44:30.904Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T10:44:30.904Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 40,
               "Title": "OrderStatus.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\Shared.Contracts\\Enums\\OrderStatus.cs",
               "RelativeDocumentMoniker": "Shared.Contracts\\Enums\\OrderStatus.cs",
@@ -459,12 +769,11 @@
               "RelativeToolTip": "Shared.Contracts\\Enums\\OrderStatus.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:44:21.123Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T10:44:21.123Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 41,
               "Title": "OrderCreatedEvent.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\Shared.Contracts\\Events\\OrderCreatedEvent.cs",
               "RelativeDocumentMoniker": "Shared.Contracts\\Events\\OrderCreatedEvent.cs",
@@ -472,12 +781,11 @@
               "RelativeToolTip": "Shared.Contracts\\Events\\OrderCreatedEvent.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:44:25.335Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T10:44:25.335Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 42,
               "Title": "UnitTest1.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO\\source\\repos\\OrderProcessingSystem\\OrderProcessingSystem\\OrderService.Tests\\UnitTest1.cs",
               "RelativeDocumentMoniker": "OrderService.Tests\\UnitTest1.cs",
@@ -485,8 +793,7 @@
               "RelativeToolTip": "OrderService.Tests\\UnitTest1.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-13T10:34:31.815Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-13T10:34:31.815Z"
             }
           ]
         }

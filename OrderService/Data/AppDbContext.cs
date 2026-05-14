@@ -9,6 +9,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
+    public DbSet<ProcessedMessage> ProcessedMessages => Set<ProcessedMessage>();
+    public DbSet<PendingWork> PendingWork => Set<PendingWork>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -36,6 +38,18 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         modelBuilder.Entity<OutboxMessage>(entity =>
         {
             entity.HasKey(o => o.Id);
+        });
+
+        modelBuilder.Entity<ProcessedMessage>(entity =>
+        {
+            entity.HasKey(p => p.Id);
+            entity.HasIndex(p => p.Id).IsUnique();
+        });
+
+        modelBuilder.Entity<PendingWork>(entity =>
+        {
+            entity.HasKey(p => p.Id);
+            entity.HasIndex(p => p.OrderId).IsUnique();
         });
     }
 }

@@ -26,6 +26,18 @@ namespace OrderService.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProcessedMessages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProcessedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProcessedMessages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OutboxMessages",
                 columns: table => new
                 {
@@ -72,6 +84,9 @@ namespace OrderService.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ProcessedMessages");
+
             migrationBuilder.DropTable(
                 name: "OrderItems");
 
