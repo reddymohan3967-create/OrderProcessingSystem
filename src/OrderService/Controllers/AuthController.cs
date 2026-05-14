@@ -9,6 +9,7 @@ using System.Security.Claims;
 namespace OrderService.Controllers;
 
 [ApiController]
+[Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("PerIpPolicy")]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {

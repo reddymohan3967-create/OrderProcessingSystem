@@ -11,3 +11,6 @@ obj/
 **/bin/
 **/obj/
 
+# Keep repository-local DB under data/ tracked by repo - do not ignore
+# (intentionally left blank)
+

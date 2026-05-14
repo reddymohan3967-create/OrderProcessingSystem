@@ -6,8 +6,9 @@ using OrderService.Utils;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=\"C:\\ProgramData\\OrderProcessing\\orders.db\""));
+// Resolve DB path so the DB file lives in repository under /data/orders.db by default
+var conn = OrderService.Utils.DbResolver.ResolveSqliteConnectionString(builder.Configuration, null, builder.Environment.ContentRootPath, Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance, true);
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(conn));
 
 // read config
 var rabbitCfg = builder.Configuration.GetSection("RabbitMq");

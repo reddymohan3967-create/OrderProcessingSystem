@@ -7,6 +7,7 @@ using Shared.Contracts.Enums;
 namespace OrderService.Controllers;
 
 [ApiController]
+[Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("PerIpPolicy")]
 [Route("api/[controller]")]
 public class OrdersController : ControllerBase
 {

@@ -6,13 +6,13 @@
       "dotnetRunMessages": true,
       "launchBrowser": false,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ORDERS_DB_PATH": "",
+        "Smtp__Host": "localhost",
+        "Smtp__Port": "1025",
+        "Smtp__UseStartTls": "false",
+        "Smtp__From": "dev@example.com"
       }
-    ,
-    "Smtp__Host": "localhost",
-    "Smtp__Port": "1025",
-    "Smtp__UseStartTls": "false",
-    "Smtp__From": "dev@example.com"
     }
   }
 }
