@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OrderService.Data;
 using OrderService.Entities;
+using System.Text.Json;
 using Shared.Contracts.Enums;
 using Shared.Contracts.Events;
 
@@ -105,10 +106,42 @@ public class OrderCreatedConsumer : IConsumer<OrderCreatedEvent>
         // Mark message as processed and update order status atomically so the ACK and
         // status transition are durable even if the in-memory batcher is down.
         var order = await db.Orders.FirstOrDefaultAsync(o => o.Id == context.Message.OrderId);
-        if (order != null && order.Status == OrderStatus.Pending)
+        OrderStatus oldStatus = OrderStatus.Pending;
+        if (order != null)
         {
-            order.Status = OrderStatus.Processing;
-            order.StatusUpdatedAtUtc = DateTime.UtcNow;
+            oldStatus = order.Status;
+            if (order.Status == OrderStatus.Pending)
+            {
+                order.Status = OrderStatus.Processing;
+                order.StatusUpdatedAtUtc = DateTime.UtcNow;
+
+                // Create an outbox message for the status update so notification
+                // consumers receive the Processing transition.
+                try
+                {
+                    var evtStatus = new Shared.Contracts.Events.OrderStatusUpdatedEvent
+                    {
+                        OrderId = order.Id,
+                        OldStatus = oldStatus,
+                        NewStatus = OrderStatus.Processing,
+                        UpdatedAtUtc = order.StatusUpdatedAtUtc,
+                        Email = order.Email ?? string.Empty
+                    };
+
+                    db.OutboxMessages.Add(new OrderService.Entities.OutboxMessage
+                    {
+                        Id = Guid.NewGuid(),
+                        EventType = nameof(Shared.Contracts.Events.OrderStatusUpdatedEvent),
+                        Payload = JsonSerializer.Serialize(evtStatus),
+                        CreatedAtUtc = DateTime.UtcNow,
+                        RetryCount = 0
+                    });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to create outbox message for OrderId {OrderId}", order.Id);
+                }
+            }
         }
 
         db.ProcessedMessages.Add(new ProcessedMessage { Id = messageId, ProcessedAtUtc = DateTime.UtcNow });
