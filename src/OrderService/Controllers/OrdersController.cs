@@ -23,6 +23,12 @@ public class OrdersController : ControllerBase
         _db = db;
     }
 
+    /// <summary>
+    /// Creates a new order.
+    /// </summary>
+    /// <param name="request">Order creation request DTO.</param>
+    /// <returns>Created order response with location header.</returns>
+
     private static Guid? ParseOrderId(string? payload)
     {
         if (string.IsNullOrWhiteSpace(payload)) return null;
@@ -76,7 +82,7 @@ public class OrdersController : ControllerBase
         try
         {
             _logger.LogInformation("GetAll invoked. User: {user}, IsAuthenticated: {auth}", User.Identity?.Name, User.Identity?.IsAuthenticated);
-            
+
             foreach (var c in User.Claims)
             {
                 _logger.LogDebug("Claim: {type} = {value}", c.Type, c.Value);

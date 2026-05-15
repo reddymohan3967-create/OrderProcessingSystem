@@ -7,6 +7,9 @@ namespace OrderService.Controllers;
 [ApiController]
 [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("PerIpPolicy")]
 [Route("api/[controller]")]
+/// <summary>
+/// API controller exposing product catalog endpoints.
+/// </summary>
 public class ProductsController : ControllerBase
 {
     private readonly AppDbContext _db;
@@ -14,6 +17,9 @@ public class ProductsController : ControllerBase
     public ProductsController(AppDbContext db) => _db = db;
 
     [HttpGet]
+    /// <summary>
+    /// Retrieves all products with basic metadata (id, name, price, icon).
+    /// </summary>
     public async Task<IActionResult> GetAll()
     {
         var products = await _db.Products

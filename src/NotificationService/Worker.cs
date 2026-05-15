@@ -4,19 +4,30 @@ using Shared.Contracts.Events;
 namespace NotificationService;
 
 /// <summary>
-/// OrderStatusUpdatedConsumer listens for OrderStatusUpdatedEvent messages and logs the status updates. This consumer is intentionally minimal, serving primarily to acknowledge receipt of the event and log its contents for demonstration purposes. In a real application, this could be extended to trigger email notifications or other side effects based on the order status change.
+/// Consumer that handles <see cref="OrderStatusUpdatedEvent"/> messages and
+/// sends notification emails to customers when their order status changes.
 /// </summary>
 public class OrderStatusUpdatedConsumer : IConsumer<OrderStatusUpdatedEvent>
 {
     private readonly ILogger<OrderStatusUpdatedConsumer> _logger;
     private readonly IEmailSender _emailSender;
 
+    /// <summary>
+    /// Constructs an <see cref="OrderStatusUpdatedConsumer"/>.
+    /// </summary>
+    /// <param name="logger">Logger for informational and error messages.</param>
+    /// <param name="emailSender">Email sender implementation used to deliver notifications.</param>
     public OrderStatusUpdatedConsumer(ILogger<OrderStatusUpdatedConsumer> logger, IEmailSender emailSender)
     {
         _logger = logger;
         _emailSender = emailSender;
     }
 
+    /// <summary>
+    /// Consumes the <see cref="OrderStatusUpdatedEvent"/>, logs the update and
+    /// attempts to send an email notification to the recipient if an email address is provided.
+    /// </summary>
+    /// <param name="context">MassTransit consume context containing the event message.</param>
     public async Task Consume(ConsumeContext<OrderStatusUpdatedEvent> context)
     {
         var evt = context.Message;
@@ -89,29 +100,32 @@ public class OrderStatusUpdatedConsumer : IConsumer<OrderStatusUpdatedEvent>
 }
 
 /// <summary>
-/// Worker is a background service that runs alongside the MassTransit consumers. In this minimal implementation, it simply logs a message when it starts and does not perform any ongoing work. This allows us to verify that the worker is running and can be extended in the future to include additional background processing if needed.
+/// Minimal background worker that runs alongside MassTransit consumers. The
+/// worker does not perform ongoing periodic work — it exists to keep the host
+/// alive and provide a place for future background tasks if needed.
 /// </summary>
 public class Worker : BackgroundService
 {
     /// <summary>
-    /// Worker uses an ILogger to log information about its execution. In this minimal implementation, it logs a message when the worker starts running. The logger is injected via the constructor and is used to provide visibility into the worker's activity, even though the worker itself does not perform any significant processing in this example.
+    /// Logger used to report worker lifecycle events.
     /// </summary>
     private readonly ILogger<Worker> _logger;
 
     /// <summary>
-    /// Worker singleton constructor takes an ILogger<Worker> which is injected by the dependency injection container. This logger is used to log information about the worker's execution, such as when it starts running. The constructor does not perform any additional initialization, keeping the worker focused on its primary responsibility of running in the background and logging its activity.
+    /// Creates a new <see cref="Worker"/> instance.
     /// </summary>
-    /// <param name="logger"></param>
+    /// <param name="logger">Logger instance injected by DI.</param>
     public Worker(ILogger<Worker> logger)
     {
         _logger = logger;
     }
 
     /// <summary>
-    /// ExecuteAsync is the main method of the Worker background service. In this minimal implementation, it logs a message indicating that the notification worker is running and then completes immediately. This allows us to verify that the worker is executing as expected without introducing any additional complexity or ongoing processing in this example.
+    /// Executes the background worker. This implementation logs a start message
+    /// and waits until the host shuts down. Override to add periodic background work.
     /// </summary>
-    /// <param name="stoppingToken"></param>
-    /// <returns></returns>
+    /// <param name="stoppingToken">Cancellation token that signals host shutdown.</param>
+    /// <returns>A task that completes when the worker stops.</returns>
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("Notification worker running");

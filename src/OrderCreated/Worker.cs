@@ -10,10 +10,10 @@ namespace OrderCreated;
 /// <summary>
 /// Worker is a background service responsible for publishing pending outbox messages to the message bus. It periodically checks the OutboxMessages table for any messages that have not yet been published (where PublishedAtUtc is null) and attempts to publish them. The worker handles deserialization of the event payload, sends the message to the appropriate queue based on the event type, and updates the OutboxMessages record with the PublishedAtUtc timestamp upon successful publication. If an error occurs during publishing, it increments a retry count and logs the error for monitoring purposes. This ensures reliable delivery of messages even in the face of transient failures, while keeping the implementation straightforward and focused on its core responsibility of publishing outbox messages.
 /// </summary>
-/// <param name="logger"></param>
-/// <param name="scopeFactory"></param>
-/// <param name="bus"></param>
-/// <param name="config"></param>
+/// <param name="logger">Logger used to report informational and error messages from the worker.</param>
+/// <param name="scopeFactory">Service scope factory used to create scoped service providers for database access.</param>
+/// <param name="bus">MassTransit bus used to obtain send endpoints for publishing events.</param>
+/// <param name="config">Configuration used to read settings such as RabbitMQ queue names.</param>
 public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, IBus bus, IConfiguration config) : BackgroundService
 {
     /// <summary>
@@ -22,10 +22,14 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
     private DateTime _lastStatusUpdateUtc = DateTime.MinValue;
 
     /// <summary>
-    /// ExecuteAsync is the main method of the Worker background service. It runs an infinite loop that periodically checks for pending outbox messages to publish. For each pending message, it attempts to deserialize the payload and publish it to the appropriate queue based on the event type. If publishing is successful, it updates the PublishedAtUtc timestamp on the OutboxMessages record. If an error occurs during publishing, it increments a retry count and logs the error. The loop includes a delay to prevent constant polling and allows for graceful shutdown when cancellation is requested.
+    /// ExecuteAsync is the main method of the Worker background service. It runs an infinite loop that periodically checks for pending outbox messages to publish.
+    /// For each pending message the worker attempts to deserialize the payload and publish it to the appropriate queue based on the <c>EventType</c>.
+    /// On successful send the worker marks the outbox row with <c>PublishedAtUtc</c> so it will not be re-sent. On failures the worker increments a retry count
+    /// and records the error so transient problems can be retried later. The loop sleeps between iterations and honors the provided cancellation token
+    /// so the host can shut down gracefully.
     /// </summary>
-    /// <param name="stoppingToken"></param>
-    /// <returns></returns>
+    /// <param name="stoppingToken">Cancellation token that signals the worker should stop processing and exit.</param>
+    /// <returns>A task that represents the lifetime of the background worker; it completes when the worker stops.</returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("Outbox Publisher Worker started");

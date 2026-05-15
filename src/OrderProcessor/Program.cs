@@ -43,6 +43,7 @@ builder.Services.AddOptions();
 
 var host = builder.Build();
 
+// Ensure the in-memory batcher is created so it can begin seeding from persisted work and start background processing.
 _ = host.Services.GetRequiredService<OrderProcessingBatcher>();
 
 host.Run();

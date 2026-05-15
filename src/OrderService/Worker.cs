@@ -7,6 +7,15 @@ using System.Text.Json;
 
 namespace OrderService;
 
+/// <summary>
+/// Background worker that publishes outbox messages for the OrderService.
+/// The worker periodically polls the OutboxMessages table and publishes
+/// events to the configured message bus, marking messages as published on success.
+/// </summary>
+/// <param name="logger">Logger used to report status and errors.</param>
+/// <param name="scopeFactory">Service scope factory used to create scoped DB contexts.</param>
+/// <param name="bus">MassTransit bus used to obtain endpoints for sending events.</param>
+/// <param name="config">Configuration used to read RabbitMQ settings and queue names.</param>
 public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, IBus bus, IConfiguration config) : BackgroundService
 {
     private DateTime _lastStatusUpdateUtc = DateTime.MinValue;
@@ -56,7 +65,8 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
 
                                 msg.PublishedAtUtc = publishedAt;
                                 msg.Error = null;
-                                try { await db.SaveChangesAsync(stoppingToken); } catch (Exception ex)
+                                try { await db.SaveChangesAsync(stoppingToken); }
+                                catch (Exception ex)
                                 {
                                     logger.LogWarning(ex, "Failed to persist PublishedAtUtc for message {MessageId}", msg.Id);
                                 }
@@ -86,7 +96,8 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
 
                                 msg.PublishedAtUtc = publishedAt2;
                                 msg.Error = null;
-                                try { await db.SaveChangesAsync(stoppingToken); } catch (Exception ex)
+                                try { await db.SaveChangesAsync(stoppingToken); }
+                                catch (Exception ex)
                                 {
                                     logger.LogWarning(ex, "Failed to persist PublishedAtUtc for status message {MessageId}", msg.Id);
                                 }

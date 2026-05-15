@@ -4,18 +4,36 @@ using System.Text.RegularExpressions;
 
 namespace NotificationService;
 
+/// <summary>
+/// Sends email messages using SMTP via MailKit. The implementation reads
+/// SMTP connection settings from configuration and retries transient errors.
+/// </summary>
 public class SmtpEmailSender : IEmailSender
 {
     private readonly IConfiguration _config;
     private readonly ILogger<SmtpEmailSender> _logger;
 
+    /// <summary>
+    /// Creates a new instance of <see cref="SmtpEmailSender"/>.
+    /// </summary>
+    /// <param name="config">Application configuration used to read SMTP settings.</param>
+    /// <param name="logger">Logger for diagnostic messages.</param>
     public SmtpEmailSender(IConfiguration config, ILogger<SmtpEmailSender> logger)
     {
         _config = config;
         _logger = logger;
     }
 
-
+    /// <summary>
+    /// Sends an email message asynchronously using SMTP. The method will attempt
+    /// to detect HTML content and set the message body appropriately. It also
+    /// performs a small retry loop with exponential backoff for transient SMTP errors.
+    /// </summary>
+    /// <param name="to">Recipient email address.</param>
+    /// <param name="subject">Email subject.</param>
+    /// <param name="body">Email body. May contain HTML markup.</param>
+    /// <param name="cancellationToken">Token to cancel the send operation.</param>
+    /// <returns>A task that completes when the email has been sent or all retries fail.</returns>
     public async Task SendAsync(string to, string subject, string body, CancellationToken cancellationToken = default)
     {
         // Read SMTP configuration from app configuration (appsettings.json, env, or user-secrets)

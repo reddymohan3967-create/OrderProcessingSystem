@@ -31,6 +31,12 @@ public class OrderCreatedConsumer : IConsumer<OrderCreatedEvent>
     /// </summary>
     private readonly IServiceScopeFactory _scopeFactory;
 
+    /// <summary>
+    /// Creates a new <see cref="OrderCreatedConsumer"/> instance.
+    /// </summary>
+    /// <param name="batcher">Batcher used to enqueue work for later processing.</param>
+    /// <param name="logger">Logger used to record processing events and errors.</param>
+    /// <param name="scopeFactory">Service scope factory used to create a scoped <see cref="OrderService.Data.AppDbContext"/> for DB operations.</param>
     public OrderCreatedConsumer(OrderProcessingBatcher batcher, ILogger<OrderCreatedConsumer> logger, IServiceScopeFactory scopeFactory)
     {
         _batcher = batcher;
@@ -38,6 +44,13 @@ public class OrderCreatedConsumer : IConsumer<OrderCreatedEvent>
         _scopeFactory = scopeFactory;
     }
 
+    /// <summary>
+    /// Consumes an <see cref="Shared.Contracts.Events.OrderCreatedEvent"/>, performs idempotent handling
+    /// and enqueues the order for batched processing. The method records a processed-message marker
+    /// in the database to prevent duplicate handling and persists a durable <c>PendingWork</c> row so the
+    /// enqueue is durable across restarts.
+    /// </summary>
+    /// <param name="context">MassTransit consume context containing the <see cref="OrderCreatedEvent"/> message and headers.</param>
     public async Task Consume(ConsumeContext<OrderCreatedEvent> context)
     {
         // Idempotency: ensure this message is only processed once using the MessageId set by publisher

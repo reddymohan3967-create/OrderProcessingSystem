@@ -9,15 +9,30 @@ using Shared.Contracts.Events;
 
 namespace OrderService.Services;
 
+/// <summary>
+/// Implementation of <see cref="IOrderService"/> providing basic order lifecycle operations
+/// such as creating orders, retrieving orders and updating status. This service uses
+/// the application's <see cref="AppDbContext"/> to persist orders and outbox messages.
+/// </summary>
 public class OrderService : IOrderService
 {
     private readonly AppDbContext _dbContext;
 
+    /// <summary>
+    /// Creates a new <see cref="OrderService"/>.
+    /// </summary>
+    /// <param name="dbContext">EF Core DB context used to persist orders and outbox messages.</param>
     public OrderService(AppDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
+    /// <summary>
+    /// Creates a new order and inserts a corresponding outbox message so the
+    /// order-created event can be published by the outbox publisher.
+    /// </summary>
+    /// <param name="request">Order creation request DTO containing items and metadata.</param>
+    /// <returns>A mapped <see cref="OrderResponse"/> representing the created order.</returns>
     public async Task<OrderResponse> CreateOrderAsync(CreateOrderRequest request)
     {
         if (request.Items is null || request.Items.Count == 0)
@@ -71,6 +86,11 @@ public class OrderService : IOrderService
         return MapToResponse(order);
     }
 
+    /// <summary>
+    /// Retrieves an order by its id including order items.
+    /// </summary>
+    /// <param name="id">Order identifier.</param>
+    /// <returns>The mapped <see cref="OrderResponse"/> or null if no order exists.</returns>
     public async Task<OrderResponse?> GetOrderByIdAsync(Guid id)
     {
         var order = await _dbContext.Orders
@@ -80,6 +100,11 @@ public class OrderService : IOrderService
         return order is null ? null : MapToResponse(order);
     }
 
+    /// <summary>
+    /// Returns orders optionally filtered by status.
+    /// </summary>
+    /// <param name="status">Optional status to filter by.</param>
+    /// <returns>List of mapped <see cref="OrderResponse"/> entries.</returns>
     public async Task<List<OrderResponse>> GetOrdersAsync(OrderStatus? status = null)
     {
         var query = _dbContext.Orders
@@ -96,6 +121,12 @@ public class OrderService : IOrderService
         return orders.Select(MapToResponse).ToList();
     }
 
+    /// <summary>
+    /// Cancels an order if it is in Pending state. This method will create
+    /// an outbox message for the status update so consumers are informed.
+    /// </summary>
+    /// <param name="id">Order identifier to cancel.</param>
+    /// <returns>True if the order was cancelled; false if it didn't exist.</returns>
     public async Task<bool> CancelOrderAsync(Guid id)
     {
         var order = await _dbContext.Orders
@@ -141,6 +172,15 @@ public class OrderService : IOrderService
         return true;
     }
 
+    /// <summary>
+    /// Updates the order status performing basic validation of allowed transitions
+    /// unless <paramref name="force"/> is true. An outbox message is created to
+    /// publish the status change.
+    /// </summary>
+    /// <param name="id">Order identifier.</param>
+    /// <param name="newStatus">New status to apply.</param>
+    /// <param name="force">When true bypasses standard transition validation.</param>
+    /// <returns>True when update succeeded; false when order not found.</returns>
     public async Task<bool> UpdateOrderStatusAsync(Guid id, OrderStatus newStatus, bool force = false)
     {
         var order = await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
@@ -197,6 +237,11 @@ public class OrderService : IOrderService
         return true;
     }
 
+    /// <summary>
+    /// Maps the EF Order entity to a DTO <see cref="OrderResponse"/>.
+    /// </summary>
+    /// <param name="order">Entity to map.</param>
+    /// <returns>Mapped response DTO.</returns>
     private static OrderResponse MapToResponse(Order order)
     {
         return new OrderResponse

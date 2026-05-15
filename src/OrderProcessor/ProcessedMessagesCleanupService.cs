@@ -39,7 +39,13 @@ public class ProcessedMessagesCleanupService : BackgroundService
         _retention = TimeSpan.FromDays(Math.Max(1, retentionDays));
         _logger.LogInformation("ProcessedMessagesCleanupService configured with interval {Hours}h and retention {Days}d", _interval.TotalHours, _retention.TotalDays);
     }
-
+    /// <summary>
+    /// Background loop which periodically removes old processed message markers from the database
+    /// to prevent the ProcessedMessages table from growing indefinitely. The cleanup respects the
+    /// configured retention period and runs at the configured interval.
+    /// </summary>
+    /// <param name="stoppingToken">Token that signals cancellation when the host is shutting down.</param>
+    /// <returns>A task representing the lifetime of the cleanup service.</returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("ProcessedMessagesCleanupService started");
