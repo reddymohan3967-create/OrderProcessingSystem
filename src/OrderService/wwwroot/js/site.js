@@ -214,47 +214,109 @@ function renderOrders() {
             if (orderStatusId === 3) actions.push(`<button class="btn btn-sm btn-success me-1" data-deliver="${o.id}">Mark Delivered</button>`);
         }
 
-        return `<div class="list-group-item d-flex justify-content-between align-items-center"><div><div><strong>${escapeHtml(o.email)}</strong> <small class="text-muted">${escapeHtml(status)}</small></div><div class="text-muted">${itemsText}</div></div><div>${actions.join('')}</div></div>`;
+        return `<div class="list-group-item d-flex justify-content-between align-items-center" data-order-id="${o.id}"><div><div><strong>${escapeHtml(o.email)}</strong> <small class="text-muted">${escapeHtml(status)}</small></div><div class="text-muted">${itemsText}</div></div><div>${actions.join('')}</div></div>`;
     }).join('');
 
     container.innerHTML = html;
 
     // delegate cancel buttons
-    container.querySelectorAll('[data-cancel]').forEach(btn => btn.addEventListener('click', () => cancelOrder(btn.getAttribute('data-cancel'))));
+    container.querySelectorAll('[data-cancel]').forEach(btn => btn.addEventListener('click', () => cancelOrder(btn.getAttribute('data-cancel'), btn)));
     // delegate ship buttons
-    container.querySelectorAll('[data-ship]').forEach(btn => btn.addEventListener('click', () => shipOrder(btn.getAttribute('data-ship'))));
-    // delegate deliver buttons
-    container.querySelectorAll('[data-deliver]').forEach(btn => btn.addEventListener('click', () => deliverOrder(btn.getAttribute('data-deliver'))));
+    container.querySelectorAll('[data-ship]').forEach(btn => btn.addEventListener('click', () => shipOrder(btn.getAttribute('data-ship'), btn)));
+    // delegate deliver buttons - pass the button element so handler can update UI optimistically
+    container.querySelectorAll('[data-deliver]').forEach(btn => btn.addEventListener('click', () => deliverOrder(btn.getAttribute('data-deliver'), btn)));
 }
 
-async function cancelOrder(id) {
+async function refreshOrder(id) {
+    try {
+        const res = await apiFetch('/api/orders/' + id);
+        if (!res.ok) return null;
+        const order = await res.json();
+        // replace in allOrders
+        const idx = allOrders.findIndex(o => String(o.id) === String(id));
+        if (idx >= 0) {
+            allOrders[idx] = order;
+        } else {
+            // if not present, add
+            allOrders.push(order);
+        }
+        // re-render orders to reflect updated status
+        renderOrders();
+        return order;
+    } catch (e) {
+        console.error('Failed to refresh order', e);
+        return null;
+    }
+}
+
+async function cancelOrder(id, btn) {
     if (!confirm('Cancel order?')) return;
+
+    const item = btn ? btn.closest('.list-group-item') : null;
+    // disable all buttons for this order
+    if (item) item.querySelectorAll('button').forEach(b => b.disabled = true);
+    // show spinner on clicked button
+    if (btn) {
+        btn.dataset.origText = btn.innerText;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cancelling';
+    }
+
     try {
         const res = await apiFetch('/api/orders/' + id, { method: 'DELETE' });
-        if (res.ok) await loadOrders(); else alert('Cancel failed');
-    } catch (e) { console.error(e); alert('Cancel failed'); }
+        if (res.ok) {
+            await refreshOrder(id);
+        } else {
+            const txt = await res.text().catch(() => 'Failed');
+            alert('Cancel failed: ' + txt);
+            if (item) item.querySelectorAll('button').forEach(b => b.disabled = false);
+            if (btn) btn.innerText = btn.dataset.origText || 'Cancel';
+        }
+    } catch (e) { console.error(e); alert('Cancel failed'); if (item) item.querySelectorAll('button').forEach(b => b.disabled = false); if (btn) btn.innerText = btn.dataset.origText || 'Cancel'; }
 }
 
-async function shipOrder(id) {
+async function shipOrder(id, btn) {
     if (!confirm('Mark order as shipped?')) return;
+
+    const item = btn ? btn.closest('.list-group-item') : null;
+    if (item) item.querySelectorAll('button').forEach(b => b.disabled = true);
+    if (btn) { btn.dataset.origText = btn.innerText; btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Shipping'; }
+
     try {
         const res = await apiFetch('/api/orders/' + id + '/ship', { method: 'POST' });
-        if (res.ok) await loadOrders(); else {
+        if (res.ok) {
+            await refreshOrder(id);
+        } else {
             const txt = await res.text().catch(() => 'Failed');
             alert('Mark shipped failed: ' + txt);
+            if (item) item.querySelectorAll('button').forEach(b => b.disabled = false);
+            if (btn) btn.innerText = btn.dataset.origText || 'Mark Shipped';
         }
-    } catch (e) { console.error(e); alert('Mark shipped failed'); }
+    } catch (e) { console.error(e); alert('Mark shipped failed'); if (item) item.querySelectorAll('button').forEach(b => b.disabled = false); if (btn) btn.innerText = btn.dataset.origText || 'Mark Shipped'; }
 }
 
-async function deliverOrder(id) {
+async function deliverOrder(id, btn) {
     if (!confirm('Mark order as delivered?')) return;
+
+    const item = btn ? btn.closest('.list-group-item') : null;
+    if (item) item.querySelectorAll('button').forEach(b => b.disabled = true);
+    if (btn) { btn.dataset.origText = btn.innerText; btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Delivering'; }
+
     try {
         const res = await apiFetch('/api/orders/' + id + '/deliver', { method: 'POST' });
-        if (res.ok) await loadOrders(); else {
+        if (res.ok) {
+            await refreshOrder(id);
+        } else {
             const txt = await res.text().catch(() => 'Failed');
             alert('Mark delivered failed: ' + txt);
+            if (item) item.querySelectorAll('button').forEach(b => b.disabled = false);
+            if (btn) btn.innerText = btn.dataset.origText || 'Mark Delivered';
         }
-    } catch (e) { console.error(e); alert('Mark delivered failed'); }
+    } catch (e) {
+        console.error(e);
+        alert('Mark delivered failed');
+        if (item) item.querySelectorAll('button').forEach(b => b.disabled = false);
+        if (btn) btn.innerText = btn.dataset.origText || 'Mark Delivered';
+    }
 }
 
 // Event wiring
@@ -336,6 +398,19 @@ async function initApp() {
     renderItems();
     await loadProducts();
     await loadOrders();
+
+    // Start periodic polling to pick up background status changes (orders processed by background workers)
+    // Poll only visible orders to avoid unnecessary load.
+    setInterval(() => {
+        try {
+            const container = dom.ordersContainer();
+            if (!container) return;
+            const ids = Array.from(container.querySelectorAll('[data-order-id]')).map(el => el.getAttribute('data-order-id'));
+            ids.forEach(id => {
+                if (id) refreshOrder(id);
+            });
+        } catch (e) { /* ignore polling errors */ }
+    }, 10_000);
 
     try {
         const params = new URLSearchParams(window.location.search);

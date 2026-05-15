@@ -1,5 +1,6 @@
 using System;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace OrderService.Utils
 {
@@ -13,36 +14,58 @@ namespace OrderService.Utils
         /// <returns></returns>
         public static string HashPassword(string password, int iterations = 100_000)
         {
-            var salt = new byte[16];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(salt);
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentException("Password must not be null or empty.", nameof(password));
 
-            using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256);
-            var subkey = pbkdf2.GetBytes(32);
+            var salt = new byte[16];
+            RandomNumberGenerator.Fill(salt);
+
+            // Use the static PBKDF2 helper to derive the key (HMACSHA256)
+            var subkey = KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA256, iterations, 32);
 
             return $"PBKDF2${iterations}${Convert.ToBase64String(salt)}${Convert.ToBase64String(subkey)}";
         }
 
+        /// <summary>
+        /// Verify Password
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="storedHash"></param>
+        /// <returns></returns>
         public static bool Verify(string password, string storedHash)
         {
-            if (string.IsNullOrEmpty(storedHash)) return false;
-            if (!storedHash.StartsWith("PBKDF2$", StringComparison.Ordinal)) return false;
+            if (string.IsNullOrEmpty(storedHash))
+                return false;
+            if (!storedHash.StartsWith("PBKDF2$", StringComparison.Ordinal))
+                return false;
+
+            var parts = storedHash.Split('$');
+            if (parts.Length != 4)
+                return false;
+
+            if (!int.TryParse(parts[1], out var iterations) || iterations <= 0)
+                return false;
+
+            byte[] salt;
+            byte[] expected;
+            try
+            {
+                salt = Convert.FromBase64String(parts[2]);
+                expected = Convert.FromBase64String(parts[3]);
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
 
             try
             {
-                var parts = storedHash.Split('$');
-                if (parts.Length != 4) return false;
-                var iterations = int.Parse(parts[1]);
-                var salt = Convert.FromBase64String(parts[2]);
-                var expected = Convert.FromBase64String(parts[3]);
-
-                using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256);
-                var actual = pbkdf2.GetBytes(expected.Length);
-
+                var actual = KeyDerivation.Pbkdf2(password ?? string.Empty, salt, KeyDerivationPrf.HMACSHA256, iterations, expected.Length);
                 return CryptographicOperations.FixedTimeEquals(actual, expected);
             }
             catch
             {
+                // Any failure during derivation should be treated as verification failure
                 return false;
             }
         }

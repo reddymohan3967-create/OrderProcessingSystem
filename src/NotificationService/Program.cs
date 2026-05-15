@@ -1,22 +1,7 @@
-using NotificationService;
 using MassTransit;
-using Shared.Contracts.Events;
+using NotificationService;
 
 var builder = Host.CreateApplicationBuilder(args);
-// Configure SMTP options from config
-builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
-
-// Prefer environment variables / user-secrets for sensitive SMTP settings
-builder.Services.PostConfigure<SmtpOptions>(opts =>
-{
-    var envUser = Environment.GetEnvironmentVariable("Smtp__Username");
-    var envPass = Environment.GetEnvironmentVariable("Smtp__Password");
-    var envFrom = Environment.GetEnvironmentVariable("Smtp__From");
-
-    if (!string.IsNullOrEmpty(envUser)) opts.Username = envUser;
-    if (!string.IsNullOrEmpty(envPass)) opts.Password = envPass;
-    if (!string.IsNullOrEmpty(envFrom)) opts.From = envFrom;
-});
 
 // Configure MassTransit to listen for OrderStatusUpdatedEvent
 var rabbit = builder.Configuration.GetSection("RabbitMq");
@@ -34,11 +19,15 @@ builder.Services.AddMassTransit(x =>
 
         cfg.ReceiveEndpoint(rabbit["Queue"] ?? "order-status-updates", e =>
         {
+            e.Durable = true;
+            e.AutoDelete = false;
+            e.PrefetchCount = 16;
             e.ConfigureConsumer<OrderStatusUpdatedConsumer>(context);
         });
     });
 });
 
+// Keep Worker as a simple host; consumer handles incoming events
 builder.Services.AddHostedService<Worker>();
 
 var host = builder.Build();
