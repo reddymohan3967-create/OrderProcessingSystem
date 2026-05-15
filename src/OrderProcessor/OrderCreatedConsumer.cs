@@ -1,14 +1,10 @@
-using System;
-using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using OrderService.Data;
 using OrderService.Entities;
-using System.Text.Json;
 using Shared.Contracts.Enums;
 using Shared.Contracts.Events;
+using System.Text.Json;
 
 namespace OrderProcessor;
 
