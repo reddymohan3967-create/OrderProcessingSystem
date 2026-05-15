@@ -36,6 +36,40 @@ public class OrderCreatedConsumer : IConsumer<OrderCreatedEvent>
             return;
         }
 
+        // Ensure this message was published by the outbox publisher. Prefer the PublishedAtUtc header but
+        // fall back to the event payload's PublishedAtUtc for compatibility and reliability.
+        DateTime? publishedAt = null;
+        try
+        {
+            if (context.Headers.TryGetHeader("PublishedAtUtc", out var publishedHeader) && publishedHeader != null)
+            {
+            if (publishedHeader is DateTime dt)
+            {
+                publishedAt = dt;
+            }
+            else
+            {
+                if (DateTime.TryParse(publishedHeader.ToString(), out var parsed))
+                    publishedAt = parsed;
+                else
+                    publishedAt = null;
+            }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to read PublishedAtUtc header for OrderId {OrderId}", context.Message.OrderId);
+        }
+
+        if (publishedAt == null && context.Message.PublishedAtUtc.HasValue)
+            publishedAt = context.Message.PublishedAtUtc.Value;
+
+        if (publishedAt == null)
+        {
+            _logger.LogInformation("Skipping processing of OrderId {OrderId} because PublishedAtUtc was not provided", context.Message.OrderId);
+            return;
+        }
+
         // Try to insert a processed-message record. If another consumer already inserted it
         // concurrently, the DB will raise a duplicate-key error and we treat that as already processed.
         using var scope = _scopeFactory.CreateScope();

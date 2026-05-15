@@ -51,13 +51,27 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
                                     ?? "order-created-queue";
 
                                 var sendEndpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"));
+                                // compute PublishedAtUtc now so we include it as a header during send
+                                var publishedAt = DateTime.UtcNow;
+                                // set PublishedAtUtc on the event payload for reliable consumer-side validation
+                                evt.PublishedAtUtc = publishedAt;
+
                                 await sendEndpoint.Send<OrderCreatedEvent>(evt, sendContext =>
                                 {
                                     sendContext.MessageId = msg.Id;
+                                    // include PublishedAtUtc so consumers can verify the message was published by the outbox
+                                    try
+                                    {
+                                        sendContext.Headers.Set("PublishedAtUtc", publishedAt);
+                                    }
+                                    catch
+                                    {
+                                        // ignore header set failures - it's best effort
+                                    }
                                 }, stoppingToken);
 
                                 // Mark this message as published and persist immediately.
-                                msg.PublishedAtUtc = DateTime.UtcNow;
+                                msg.PublishedAtUtc = publishedAt;
                                 msg.Error = null;
                                 try
                                 {
