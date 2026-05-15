@@ -1,79 +1,117 @@
-# OrderProcessingSystem - Local Development README
 
-This repository contains multiple services that share a common SQLite database (`Orders.db`). To make local development and demos convenient, the code resolves a single shared DB path used by the API and background workers.
+# OrderProcessingSystem
 
-Default behavior
-- By default the shared database is placed under the machine-wide ProgramData folder:
-  - Windows: `%PROGRAMDATA%\OrderProcessing\Orders.db` (e.g. `C:\ProgramData\OrderProcessing\Orders.db`)
-- The `OrderService` (the API) is the authoritative creator/preparer of the database. On startup it will copy any project-local `orders.db` into the shared location (backing up an existing publish DB with a timestamp) or create the database using EF Core migrations if it does not exist.
-- Other services (`OrderProcessor`, `OrderCreated`, etc.) will use the same shared path but will not create or modify the DB. They log a warning if the DB is missing.
- - Other services (`OrderProcessor`, `OrderCreated`, etc.) will use the same shared path but will not create or modify the DB. They log a warning if the DB is missing. Start `OrderService` first so it can prepare/create the DB.
+Comprehensive example of an order processing pipeline implemented with .NET 10. The solution demonstrates:
 
-Override the shared DB path
-You can override the shared DB location in three ways (ordered by precedence):
+- Transactional event publishing using the Outbox pattern
+- Message delivery with MassTransit and RabbitMQ
+- Simple Web API for order management
+- Background workers for publishing, processing and notification
+- Local SQLite persistence for easy development
 
-1. Environment variable `ORDERS_DB_PATH`
-   - Set this environment variable to the desired full path to `Orders.db`.
-   - Example (PowerShell):
-     ```powershell
-     $env:ORDERS_DB_PATH = "C:\Users\You\data\Orders.db"
-     dotnet run --project .\OrderService\
-     ```
-   - Visual Studio launch profiles in `Properties/launchSettings.json` can include `ORDERS_DB_PATH` as an environment variable.
+Contents
 
-2. App configuration `SharedDb:Path`
-   - Add the following to `appsettings.json` for a project to set a shared path (absolute):
-     ```json
-     "SharedDb": {
-       "Path": "C:\\path\\to\\Orders.db"
-     }
-     ```
-   - This will be respected by the DB resolver.
+- `src/OrderService` — ASP.NET Core Web API: create orders, update status, list orders. Implements the outbox pattern and optional in-app outbox publisher.
+- `src/OrderCreated` — Publisher-only worker that publishes outbox messages to RabbitMQ (alternative to running publisher inside `OrderService`).
+- `src/OrderProcessor` — Background services/consumers that process created orders and advance status.
+- `src/NotificationService` — Example service that demonstrates sending notifications (e.g., email) when events occur.
+- `src/Shared.Contracts` — Shared DTOs and event definitions used across services.
 
-3. Default (no override)
-   - Uses `%PROGRAMDATA%\OrderProcessing\Orders.db`.
+Key concepts
 
-Requirement: Launch OrderService first
-- The `OrderService` is responsible for preparing/creating the shared DB when required. Start the API first so it can create the database and apply EF Core migrations.
-- Once `OrderService` is running, start `OrderProcessor`, `OrderCreated`, or other worker services — they will use the prepared shared DB.
+- Outbox pattern: events are written to an `OutboxMessages` table inside the same transaction that mutates the domain state. A separate worker publishes pending outbox rows to the message broker and marks them as published.
+- MassTransit + RabbitMQ: MassTransit is used as the messaging library and RabbitMQ as the transport. Queue names and credentials are configurable.
+- Rate limiting: the API uses ASP.NET Core rate limiting middleware (per-IP fixed window). Settings are configurable.
 
-Notes
-- The resolver backs up any existing shared DB before copying a project-local DB into the shared location (timestamped `.bak`).
-- If copy fails during prepare, the process will log an error and fail fast to avoid inconsistent state.
-- If you prefer a per-user DB instead of machine-wide, set `SharedDb:Path` or `ORDERS_DB_PATH` to a per-user location (for example under `%LOCALAPPDATA%`).
+Prerequisites
 
-Troubleshooting
-- If other services log a warning that the shared DB is missing, ensure `OrderService` has been started and that it created the DB at the resolved path.
-- To inspect the exact DB path each service uses, check the application console output — the resolver logs the resolved path on startup.
+- .NET 10 SDK
+- RabbitMQ (for full end-to-end testing) — optional to exercise local DB and worker behaviour
+- Docker (optional, for MailHog / smtp4dev)
 
-Security and production
-- For production deployments, prefer a proper database server (Postgres, SQL Server) instead of SQLite and configure connection strings via secure configuration.
+Getting started
 
-Local email testing with MailHog (recommended)
----------------------------------------------
+1. Build the solution:
 
-For local development it's recommended to use a local SMTP sink instead of sending real emails via Gmail. MailHog is simple and easy to run via Docker:
+   dotnet build
 
-1. Run MailHog with Docker:
+2. Run the API (`OrderService`):
 
-```powershell
-docker run -d -p 1025:1025 -p 8025:8025 mailhog/mailhog
-```
+   dotnet run --project src/OrderService
 
-2. Configure the NotificationService to use MailHog. You can set environment variables (recommended) or user-secrets in the `NotificationService` project folder.
+   The API uses an SQLite DB by default. See the DB section below for the location.
 
-PowerShell (current session):
+3. Run a publisher/worker (optional):
 
-```powershell
-$env:Smtp__Host = 'localhost'
-$env:Smtp__Port = '1025'
-$env:Smtp__UseStartTls = 'false'
-$env:Smtp__From = 'dev@example.com'
-dotnet run --project .\NotificationService\NotificationService.csproj
-```
+   - You can run the outbox publisher from within `OrderService` (it can host the worker), or run `OrderCreated` as a dedicated publisher:
+     dotnet run --project src/OrderCreated
 
-3. Open MailHog UI at http://localhost:8025 to inspect sent messages.
+4. Run consumers / processors:
 
-Alternatives: `smtp4dev` (desktop app or Docker) provides similar functionality and UI.
+   dotnet run --project src/OrderProcessor
 
+Configuration
+
+- RabbitMQ
+  - Configure RabbitMQ via `appsettings.*.json` or environment variables.
+  - Keys:
+    - `RabbitMq:Host` (default: `localhost`)
+    - `RabbitMq:Username` (default: `guest`)
+    - `RabbitMq:Password` (default: `guest`)
+    - `RabbitMq:Queue` - queue for `OrderCreatedEvent` (can be overridden by env var `RABBITMQ_QUEUE`)
+    - `RabbitMq:QueueStatus` - queue for `OrderStatusUpdatedEvent` (can be overridden by env var `RABBITMQ_QUEUE_STATUS`)
+
+- Rate Limiting
+  - Defaults are set in `OrderService`:
+    - `PermitLimit` = 600 (requests per window)
+    - `WindowSeconds` = 60
+  - Override in configuration under `RateLimiting` (or via environment variables):
+
+    ```json
+    "RateLimiting": {
+      "PermitLimit": 1200,
+      "WindowSeconds": 60
+    }
+    ```
+
+- Database (SQLite)
+  - Projects use SQLite for local development. By default the DB is resolved relative to each project's content root so a project-local `data/orders.db` can be used.
+  - The `OrderService` is responsible for creating/preparing the DB (it will create or copy the project-local DB into the configured location).
+  - For production, prefer a managed RDBMS (Postgres, SQL Server) and secure connection strings.
+
+Events and outbox
+
+- `OrderService` writes `OrderCreatedEvent` and `OrderStatusUpdatedEvent` into the `OutboxMessages` table when actions occur.
+- A background worker (hosted either in `OrderService` or `OrderCreated`) reads pending outbox messages (`PublishedAtUtc == null`) and publishes them to RabbitMQ using MassTransit. On success the worker sets `PublishedAtUtc` so messages are not re-sent.
+
+Local email testing
+
+- Use MailHog or smtp4dev for local SMTP sink testing. Example (MailHog):
+
+  docker run -d -p 1025:1025 -p 8025:8025 mailhog/mailhog
+
+  Then set NotificationService SMTP config to `localhost:1025` and open MailHog UI at `http://localhost:8025`.
+
+Testing
+
+- Unit tests are located under `test/`. Run with:
+
+  dotnet test
+
+Development notes
+
+- The outbox worker includes reasonable defaults (poll interval, batch size) but can be tuned in `src/OrderService/Worker.cs` or `src/OrderCreated/Worker.cs`.
+- If you want a clean separation, run the publisher as a separate process (`OrderCreated`) and keep the API strictly for HTTP endpoints.
+
+Contributing
+
+- Contributions welcome. Open issues or pull requests describing changes or improvements.
+
+License
+
+- This repository is provided for demonstration purposes. Add a LICENSE file if you wish to publish under a specific license.
+
+Support
+
+- If you need help running the project, open an issue and include OS, .NET SDK version and any error logs.
 
