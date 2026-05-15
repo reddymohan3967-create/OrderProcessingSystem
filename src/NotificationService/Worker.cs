@@ -39,7 +39,7 @@ public class OrderStatusUpdatedConsumer : IConsumer<OrderStatusUpdatedEvent>
             return;
         }
 
-        var subject = evt.NewStatus switch
+        var baseSubject = evt.NewStatus switch
         {
             Shared.Contracts.Enums.OrderStatus.Processing => "Your order is being processed",
             Shared.Contracts.Enums.OrderStatus.Shipped => "Your order has shipped",
@@ -47,6 +47,8 @@ public class OrderStatusUpdatedConsumer : IConsumer<OrderStatusUpdatedEvent>
             Shared.Contracts.Enums.OrderStatus.Cancelled => "Your order was cancelled",
             _ => "Order status updated"
         };
+
+        var subject = $"{baseSubject} (Order {evt.OrderId})";
 
         // Build a simple HTML email with order details and a plain-text fallback
         var html = $@"<html>
