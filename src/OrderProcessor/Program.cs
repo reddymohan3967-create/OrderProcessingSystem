@@ -38,7 +38,6 @@ builder.Services.AddMassTransit(x =>
 });
 
 builder.Services.AddSingleton<OrderProcessingBatcher>();
-builder.Services.AddHostedService<OrderStatusAdvancerService>();
 builder.Services.AddHostedService<ProcessedMessagesCleanupService>();
 builder.Services.AddOptions();
 

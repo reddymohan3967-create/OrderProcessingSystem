@@ -16,3 +16,4 @@ obj/
 
 /.vs/OrderProcessingSystem/CopilotIndices/18.4.114.215/CodeChunks.db
 /.vs/OrderProcessingSystem/CopilotIndices/18.4.114.215/SemanticSymbols.db
+/build

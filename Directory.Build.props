@@ -1,0 +1,22 @@
+<Project>
+  <PropertyGroup>
+    <!-- Root directory where this file lives -->
+    <SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
+
+    <!-- Centralize compiled outputs for each project under `build/<Project>/<Configuration>/` -->
+    <BaseOutputPath>$(SolutionRoot)build\</BaseOutputPath>
+    <OutputPath>$(BaseOutputPath)$(MSBuildProjectName)\$(Configuration)\</OutputPath>
+
+    <!-- Publish destinations for `dotnet publish` go to a solution-level `publish` folder.
+         Each project will publish into its own subfolder. -->
+    <PublishDir>$(SolutionRoot)publish\$(MSBuildProjectName)\</PublishDir>
+
+    <!-- Publish destinations for `dotnet publish` go to a solution-level `publish` folder.
+         Each project will publish into its own subfolder. -->
+    <PublishDir>$(SolutionRoot)publish\$(MSBuildProjectName)\</PublishDir>
+
+    <!-- Keep MSBuild behavior predictable: do not append extra TFM/runtime folders. -->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+</Project>
