@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
+using MassTransit;
 using OrderService.Data;
 using Microsoft.AspNetCore.Authentication;
 using OrderService.Authentication;
@@ -16,14 +17,19 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = 429;
+    // Read rate limit settings from configuration if present
+    var rateCfg = builder.Configuration.GetSection("RateLimiting");
+    var permitLimit = rateCfg.GetValue<int?>("PermitLimit") ?? 600; // default increased to 600
+    var windowSeconds = rateCfg.GetValue<int?>("WindowSeconds") ?? 60;
+
     options.OnRejected = (context, cancellationToken) =>
     {
         // set Retry-After header to advise clients and return a small JSON body
-        context.HttpContext.Response.Headers["Retry-After"] = "60";
+        context.HttpContext.Response.Headers["Retry-After"] = windowSeconds.ToString();
         context.HttpContext.Response.ContentType = "application/json";
         var body = System.Text.Json.JsonSerializer.Serialize(new {
-            message = "Too many requests. Try again in 60 seconds.",
-            retryAfter = 60
+            message = $"Too many requests. Try again in {windowSeconds} seconds.",
+            retryAfter = windowSeconds
         });
         return new System.Threading.Tasks.ValueTask(context.HttpContext.Response.WriteAsync(body, cancellationToken));
     };
@@ -34,8 +40,8 @@ builder.Services.AddRateLimiter(options =>
         var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
         return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
         {
-            PermitLimit = 60,
-            Window = TimeSpan.FromMinutes(1),
+            PermitLimit = permitLimit,
+            Window = TimeSpan.FromSeconds(windowSeconds),
             QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
             QueueLimit = 0
         });
@@ -46,10 +52,27 @@ builder.Services.AddRateLimiter(options =>
 var conn = OrderService.Utils.DbResolver.ResolveSqliteConnectionString(builder.Configuration, null, builder.Environment.ContentRootPath, Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance, true);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(conn));
 
+// Configure RabbitMQ (MassTransit) for publishing outbox messages. Uses config section RabbitMq or environment variables.
+var rabbitCfg = builder.Configuration.GetSection("RabbitMq");
+builder.Services.AddMassTransit(x =>
+{
+    // Publisher-only configuration; consumers run in other services
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(rabbitCfg["Host"] ?? "localhost", h =>
+        {
+            h.Username(rabbitCfg["Username"] ?? "guest");
+            h.Password(rabbitCfg["Password"] ?? "guest");
+        });
+    });
+});
+
+// Register outbox publisher worker which will read OutboxMessages and publish to RabbitMQ
+builder.Services.AddHostedService<OrderService.Worker>();
+
 // Register application services
 builder.Services.AddScoped<OrderService.Services.OrderService>();
 builder.Services.AddScoped<OrderService.Interfaces.IOrderService>(sp => sp.GetRequiredService<OrderService.Services.OrderService>());
-
 
 builder.Services.AddAuthentication(options =>
 {

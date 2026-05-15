@@ -11,10 +11,24 @@ using Shared.Contracts.Events;
 
 namespace OrderProcessor;
 
+/// <summary>
+/// OrderCreatedConsumer is a MassTransit consumer that listens for OrderCreatedEvent messages. When it receives an event, it performs idempotent processing to ensure that each message is only processed once, even in the face of duplicates. It checks for a MessageId to track processed messages and uses the PublishedAtUtc timestamp to ensure that only messages published by the outbox publisher are processed. The consumer updates the order status to Processing and enqueues the order ID for batch processing by the OrderProcessingBatcher. It also handles potential database concurrency issues when marking messages as processed and ensures durability of the enqueue operation by persisting a PendingWork record in the database. This design allows for reliable and idempotent processing of order creation events while maintaining visibility into processing through logging.
+/// </summary>
 public class OrderCreatedConsumer : IConsumer<OrderCreatedEvent>
 {
+    /// <summary>
+    /// batcher is an instance of OrderProcessingBatcher, which is responsible for batching order processing work. When an OrderCreatedEvent is consumed, the consumer enqueues the order ID into the batcher for later processing. This allows for efficient handling of multiple orders by processing them in batches rather than individually, which can improve performance and reduce resource contention when there are high volumes of orders being created.
+    /// </summary>
     private readonly OrderProcessingBatcher _batcher;
+
+    /// <summary>
+    /// OrderCreatedConsumer uses an ILogger<OrderCreatedConsumer> to log information about the processing of OrderCreatedEvent messages. This includes logging when messages are enqueued for batch processing, as well as any warnings or errors that occur during processing. The logger provides visibility into the consumer's activity and helps with troubleshooting and monitoring the flow of events through the system.
+    /// </summary>
     private readonly ILogger<OrderCreatedConsumer> _logger;
+
+    /// <summary>
+    /// IServiceScopeFactory is used to create a new scope for each consumed message, allowing the consumer to resolve scoped services such as the AppDbContext. This is important for ensuring that database operations are performed within the appropriate scope and that resources are properly managed. By creating a new scope for each message, we can ensure that the consumer can safely interact with the database and other scoped services without risking conflicts or resource leaks across multiple messages being processed concurrently.
+    /// </summary>
     private readonly IServiceScopeFactory _scopeFactory;
 
     public OrderCreatedConsumer(OrderProcessingBatcher batcher, ILogger<OrderCreatedConsumer> logger, IServiceScopeFactory scopeFactory)

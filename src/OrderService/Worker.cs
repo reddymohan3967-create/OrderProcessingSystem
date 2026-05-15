@@ -1,36 +1,20 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using OrderService.Data;
 using Shared.Contracts.Events;
-using Shared.Contracts.Enums;
 using System.Text.Json;
 
-namespace OrderCreated;
+namespace OrderService;
 
-/// <summary>
-/// Worker is a background service responsible for publishing pending outbox messages to the message bus. It periodically checks the OutboxMessages table for any messages that have not yet been published (where PublishedAtUtc is null) and attempts to publish them. The worker handles deserialization of the event payload, sends the message to the appropriate queue based on the event type, and updates the OutboxMessages record with the PublishedAtUtc timestamp upon successful publication. If an error occurs during publishing, it increments a retry count and logs the error for monitoring purposes. This ensures reliable delivery of messages even in the face of transient failures, while keeping the implementation straightforward and focused on its core responsibility of publishing outbox messages.
-/// </summary>
-/// <param name="logger"></param>
-/// <param name="scopeFactory"></param>
-/// <param name="bus"></param>
-/// <param name="config"></param>
 public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, IBus bus, IConfiguration config) : BackgroundService
 {
-    /// <summary>
-    /// lastStatusUpdateUtc tracks the last time the worker logged a status update about pending messages. This is used to limit the frequency of logging when there are messages to publish, ensuring that we log at most once every 30 seconds about pending messages. This helps reduce log noise while still providing visibility into the worker's activity when there are messages to be published.
-    /// </summary>
     private DateTime _lastStatusUpdateUtc = DateTime.MinValue;
 
-    /// <summary>
-    /// ExecuteAsync is the main method of the Worker background service. It runs an infinite loop that periodically checks for pending outbox messages to publish. For each pending message, it attempts to deserialize the payload and publish it to the appropriate queue based on the event type. If publishing is successful, it updates the PublishedAtUtc timestamp on the OutboxMessages record. If an error occurs during publishing, it increments a retry count and logs the error. The loop includes a delay to prevent constant polling and allows for graceful shutdown when cancellation is requested.
-    /// </summary>
-    /// <param name="stoppingToken"></param>
-    /// <returns></returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("Outbox Publisher Worker started");
 
-        // Simple outbox publisher loop
         while (!stoppingToken.IsCancellationRequested)
         {
             try
@@ -44,58 +28,36 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
                     .Take(20)
                     .ToListAsync(stoppingToken);
 
-                // Minimal logging: only note when there are messages to publish
                 if (pending.Count > 0)
                     logger.LogInformation("Outbox worker publishing {Count} pending messages", pending.Count);
 
                 foreach (var msg in pending)
                 {
-                    // attempt publish for each pending outbox message
                     try
                     {
-                        // Deserialize and publish typed event
                         if (msg.EventType == nameof(OrderCreatedEvent))
                         {
-
                             var evt = JsonSerializer.Deserialize<OrderCreatedEvent>(msg.Payload);
                             if (evt != null)
                             {
-                                // Determine queue name from environment or configuration so it's
-                                // consistent with the RabbitMq:Queue setting in appsettings.
                                 var queueName = Environment.GetEnvironmentVariable("RABBITMQ_QUEUE")
                                     ?? config?["RabbitMq:Queue"]
                                     ?? "order-created-queue";
 
                                 var sendEndpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"));
-                                // compute PublishedAtUtc now so we include it as a header during send
                                 var publishedAt = DateTime.UtcNow;
-                                // set PublishedAtUtc on the event payload for reliable consumer-side validation
                                 evt.PublishedAtUtc = publishedAt;
 
                                 await sendEndpoint.Send<OrderCreatedEvent>(evt, sendContext =>
                                 {
                                     sendContext.MessageId = msg.Id;
-                                    // include PublishedAtUtc so consumers can verify the message was published by the outbox
-                                    try
-                                    {
-                                        sendContext.Headers.Set("PublishedAtUtc", publishedAt);
-                                    }
-                                    catch
-                                    {
-                                        // ignore header set failures - it's best effort
-                                    }
+                                    try { sendContext.Headers.Set("PublishedAtUtc", publishedAt); } catch { }
                                 }, stoppingToken);
 
-                                // Mark this message as published and persist immediately.
                                 msg.PublishedAtUtc = publishedAt;
                                 msg.Error = null;
-                                try
+                                try { await db.SaveChangesAsync(stoppingToken); } catch (Exception ex)
                                 {
-                                    await db.SaveChangesAsync(stoppingToken);
-                                }
-                                catch (Exception ex)
-                                {
-                                    // Only warn on failure to persist the flag
                                     logger.LogWarning(ex, "Failed to persist PublishedAtUtc for message {MessageId}", msg.Id);
                                 }
                                 continue;
@@ -115,26 +77,16 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
                                     ?? "order-status-updates";
 
                                 var sendEndpoint2 = await bus.GetSendEndpoint(new Uri($"queue:{queueName2}"));
-                                // publish and record PublishedAtUtc so we don't re-send later
                                 var publishedAt2 = DateTime.UtcNow;
                                 await sendEndpoint2.Send<OrderStatusUpdatedEvent>(evt2, sendContext =>
                                 {
                                     sendContext.MessageId = msg.Id;
-                                    try
-                                    {
-                                        sendContext.Headers.Set("PublishedAtUtc", publishedAt2);
-                                    }
-                                    catch { }
+                                    try { sendContext.Headers.Set("PublishedAtUtc", publishedAt2); } catch { }
                                 }, stoppingToken);
 
-                                // mark this outbox message as published
                                 msg.PublishedAtUtc = publishedAt2;
                                 msg.Error = null;
-                                try
-                                {
-                                    await db.SaveChangesAsync(stoppingToken);
-                                }
-                                catch (Exception ex)
+                                try { await db.SaveChangesAsync(stoppingToken); } catch (Exception ex)
                                 {
                                     logger.LogWarning(ex, "Failed to persist PublishedAtUtc for status message {MessageId}", msg.Id);
                                 }
@@ -154,13 +106,9 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
                         msg.RetryCount += 1;
                         msg.Error = ex.Message;
                         logger.LogError(ex, "Failed to publish outbox message {MessageId}, retry count: {RetryCount}", msg.Id, msg.RetryCount);
-
-                        // Failed to publish; error and retry count already set on message
                     }
                 }
 
-                // Persist Outbox message PublishedAtUtc / Error changes so messages are
-                // marked published and won't be re-sent.
                 await db.SaveChangesAsync(stoppingToken);
             }
             catch (OperationCanceledException)

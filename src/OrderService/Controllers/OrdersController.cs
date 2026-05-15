@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Interfaces;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Shared.Contracts.DTOs;
 using Shared.Contracts.Enums;
 
@@ -13,11 +14,29 @@ public class OrdersController : ControllerBase
 {
     private readonly IOrderService _orderService;
     private readonly ILogger<OrdersController> _logger;
+    private readonly OrderService.Data.AppDbContext _db;
 
-    public OrdersController(IOrderService orderService, ILogger<OrdersController> logger)
+    public OrdersController(IOrderService orderService, ILogger<OrdersController> logger, OrderService.Data.AppDbContext db)
     {
         _orderService = orderService;
         _logger = logger;
+        _db = db;
+    }
+
+    private static Guid? ParseOrderId(string? payload)
+    {
+        if (string.IsNullOrWhiteSpace(payload)) return null;
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(payload);
+            if (doc.RootElement.TryGetProperty("OrderId", out var p))
+            {
+                if (p.ValueKind == System.Text.Json.JsonValueKind.String && Guid.TryParse(p.GetString(), out var g))
+                    return g;
+            }
+        }
+        catch { }
+        return null;
     }
 
     [HttpPost]
@@ -165,9 +184,52 @@ public class OrdersController : ControllerBase
 
         try
         {
+            // capture existing state so we can ensure an outbox entry exists
+            var order = await _db.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            if (order is null) return NotFound();
+
+            var oldStatus = order.Status;
+
             var force = User.IsInRole("Admin");
             var ok = await _orderService.UpdateOrderStatusAsync(id, OrderStatus.Shipped, force);
             if (!ok) return NotFound();
+
+            // Ensure an OrderStatusUpdatedEvent outbox exists for this change. In some flows
+            // the status update path may not have created an outbox entry (legacy callers),
+            // so create one if missing.
+            // More robust check: load recent outbox messages for this event type and parse JSON payloads
+            // to find a payload with OrderId == id. This avoids brittle string matching.
+            var candidates = await _db.OutboxMessages
+                .Where(m => m.EventType == nameof(Shared.Contracts.Events.OrderStatusUpdatedEvent))
+                .OrderByDescending(m => m.CreatedAtUtc)
+                .Take(50)
+                .ToListAsync();
+
+            var exists = candidates.Any(m => ParseOrderId(m.Payload) == id);
+
+            if (!exists)
+            {
+                var evt = new Shared.Contracts.Events.OrderStatusUpdatedEvent
+                {
+                    OrderId = id,
+                    OldStatus = oldStatus,
+                    NewStatus = OrderStatus.Shipped,
+                    UpdatedAtUtc = DateTime.UtcNow,
+                    Email = order.Email ?? string.Empty
+                };
+
+                _db.OutboxMessages.Add(new OrderService.Entities.OutboxMessage
+                {
+                    Id = Guid.NewGuid(),
+                    EventType = nameof(Shared.Contracts.Events.OrderStatusUpdatedEvent),
+                    Payload = System.Text.Json.JsonSerializer.Serialize(evt),
+                    CreatedAtUtc = DateTime.UtcNow,
+                    RetryCount = 0
+                });
+
+                await _db.SaveChangesAsync();
+            }
+
             return NoContent();
         }
         catch (InvalidOperationException ex)
@@ -186,9 +248,46 @@ public class OrdersController : ControllerBase
 
         try
         {
+            var order = await _db.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            if (order is null) return NotFound();
+
+            var oldStatus = order.Status;
+
             var force = User.IsInRole("Admin");
             var ok = await _orderService.UpdateOrderStatusAsync(id, OrderStatus.Delivered, force);
             if (!ok) return NotFound();
+
+            var candidates2 = await _db.OutboxMessages
+                .Where(m => m.EventType == nameof(Shared.Contracts.Events.OrderStatusUpdatedEvent))
+                .OrderByDescending(m => m.CreatedAtUtc)
+                .Take(50)
+                .ToListAsync();
+
+            var exists = candidates2.Any(m => ParseOrderId(m.Payload) == id);
+
+            if (!exists)
+            {
+                var evt = new Shared.Contracts.Events.OrderStatusUpdatedEvent
+                {
+                    OrderId = id,
+                    OldStatus = oldStatus,
+                    NewStatus = OrderStatus.Delivered,
+                    UpdatedAtUtc = DateTime.UtcNow,
+                    Email = order.Email ?? string.Empty
+                };
+
+                _db.OutboxMessages.Add(new OrderService.Entities.OutboxMessage
+                {
+                    Id = Guid.NewGuid(),
+                    EventType = nameof(Shared.Contracts.Events.OrderStatusUpdatedEvent),
+                    Payload = System.Text.Json.JsonSerializer.Serialize(evt),
+                    CreatedAtUtc = DateTime.UtcNow,
+                    RetryCount = 0
+                });
+
+                await _db.SaveChangesAsync();
+            }
+
             return NoContent();
         }
         catch (InvalidOperationException ex)

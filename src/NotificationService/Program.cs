@@ -1,5 +1,6 @@
 using MassTransit;
 using NotificationService;
+using Microsoft.Extensions.Configuration;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -17,7 +18,13 @@ builder.Services.AddMassTransit(x =>
             h.Password(rabbit["Password"] ?? "guest");
         });
 
-        cfg.ReceiveEndpoint(rabbit["Queue"] ?? "order-status-updates", e =>
+        // Allow queue override from either RabbitMq:QueueStatus or legacy RabbitMq:Queue
+        var queueName = Environment.GetEnvironmentVariable("RABBITMQ_QUEUE_STATUS")
+            ?? rabbit["QueueStatus"]
+            ?? rabbit["Queue"]
+            ?? "order-status-updates";
+
+        cfg.ReceiveEndpoint(queueName, e =>
         {
             e.Durable = true;
             e.AutoDelete = false;
@@ -29,6 +36,9 @@ builder.Services.AddMassTransit(x =>
 
 // Keep Worker as a simple host; consumer handles incoming events
 builder.Services.AddHostedService<Worker>();
+
+// Register email sender
+builder.Services.AddSingleton<IEmailSender, SmtpEmailSender>();
 
 var host = builder.Build();
 host.Run();

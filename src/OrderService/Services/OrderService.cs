@@ -108,9 +108,35 @@ public class OrderService : IOrderService
             throw new InvalidOperationException(
                 "Only orders in Pending status can be cancelled.");
 
+        // Use a transaction so the status change and outbox entry are atomic
+        await using var tx = await _dbContext.Database.BeginTransactionAsync();
+
+        var oldStatus = order.Status;
         order.Status = OrderStatus.Cancelled;
+        order.StatusUpdatedAtUtc = DateTime.UtcNow;
+
+        var evt = new OrderStatusUpdatedEvent
+        {
+            OrderId = order.Id,
+            OldStatus = oldStatus,
+            NewStatus = OrderStatus.Cancelled,
+            UpdatedAtUtc = order.StatusUpdatedAtUtc,
+            Email = order.Email ?? string.Empty
+        };
+
+        var outbox = new OutboxMessage
+        {
+            Id = Guid.NewGuid(),
+            EventType = nameof(OrderStatusUpdatedEvent),
+            Payload = JsonSerializer.Serialize(evt),
+            CreatedAtUtc = DateTime.UtcNow,
+            RetryCount = 0
+        };
+
+        _dbContext.OutboxMessages.Add(outbox);
 
         await _dbContext.SaveChangesAsync();
+        await tx.CommitAsync();
 
         return true;
     }
@@ -138,9 +164,35 @@ public class OrderService : IOrderService
                 throw new InvalidOperationException($"Invalid status transition from {order.Status} to {newStatus}");
         }
 
+        // Use a transaction so the status change and outbox entry are atomic
+        await using var tx = await _dbContext.Database.BeginTransactionAsync();
+
+        var oldStatus = order.Status;
         order.Status = newStatus;
         order.StatusUpdatedAtUtc = DateTime.UtcNow;
+
+        var evt = new OrderStatusUpdatedEvent
+        {
+            OrderId = order.Id,
+            OldStatus = oldStatus,
+            NewStatus = newStatus,
+            UpdatedAtUtc = order.StatusUpdatedAtUtc,
+            Email = order.Email ?? string.Empty
+        };
+
+        var outboxMessage = new OutboxMessage
+        {
+            Id = Guid.NewGuid(),
+            EventType = nameof(OrderStatusUpdatedEvent),
+            Payload = JsonSerializer.Serialize(evt),
+            CreatedAtUtc = DateTime.UtcNow,
+            RetryCount = 0
+        };
+
+        _dbContext.OutboxMessages.Add(outboxMessage);
+
         await _dbContext.SaveChangesAsync();
+        await tx.CommitAsync();
 
         return true;
     }

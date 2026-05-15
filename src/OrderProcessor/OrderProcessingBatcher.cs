@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MassTransit;
 using OrderService.Data;
+using OrderService.Entities;
 using Shared.Contracts.Events;
 using Shared.Contracts.Enums;
 
@@ -232,34 +233,46 @@ public class OrderProcessingBatcher : IAsyncDisposable
 
                     if (updated > 0 || pendingWorks.Count > 0)
                     {
-                        await db.SaveChangesAsync(token);
-
+                        // Create outbox messages for updated orders so the existing outbox
+                        // publisher will send them to RabbitMQ. Doing this before SaveChanges
+                        // makes the status update and outbox insert atomic.
                         if (updated > 0)
-                            _logger.LogInformation("Batcher updated {Count} orders to Processing", updated);
-                        if (pendingWorks.Count > 0)
-                            _logger.LogInformation("Batcher removed {Count} PendingWork rows", pendingWorks.Count);
-
-                        // Publish OrderStatusUpdatedEvent for each updated order so downstream
-                        // services (notifications, audits) can react. Fire-and-forget publish.
-                        foreach (var n in toNotify)
                         {
-                            try
+                            var outboxMessages = new List<OutboxMessage>();
+                            foreach (var n in toNotify)
                             {
                                 var ord = orders.FirstOrDefault(o => o.Id == n.OrderId);
-                                await _publishEndpoint.Publish(new OrderStatusUpdatedEvent
+                                var evt = new OrderStatusUpdatedEvent
                                 {
                                     OrderId = n.OrderId,
                                     OldStatus = n.OldStatus,
                                     NewStatus = OrderStatus.Processing,
                                     UpdatedAtUtc = ord?.StatusUpdatedAtUtc ?? DateTime.UtcNow,
                                     Email = ord?.Email ?? string.Empty
-                                }, token);
+                                };
+
+                                outboxMessages.Add(new OutboxMessage
+                                {
+                                    Id = Guid.NewGuid(),
+                                    EventType = nameof(OrderStatusUpdatedEvent),
+                                    Payload = JsonSerializer.Serialize(evt),
+                                    CreatedAtUtc = DateTime.UtcNow,
+                                    RetryCount = 0
+                                });
                             }
-                            catch (Exception ex)
-                            {
-                                _logger.LogWarning(ex, "Failed to publish OrderStatusUpdatedEvent for OrderId {OrderId}", n.OrderId);
-                            }
+
+                            if (outboxMessages.Count > 0)
+                                db.OutboxMessages.AddRange(outboxMessages);
                         }
+
+                        await db.SaveChangesAsync(token);
+
+                        if (updated > 0)
+                            _logger.LogInformation("Batcher updated {Count} orders to Processing", updated);
+                        if (pendingWorks.Count > 0)
+                            _logger.LogInformation("Batcher removed {Count} PendingWork rows", pendingWorks.Count);
+                        if (updated > 0)
+                            _logger.LogInformation("Batcher created {Count} Outbox messages for status updates", toNotify.Count);
                     }
 
                     buffer.Clear();
