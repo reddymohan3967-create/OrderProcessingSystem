@@ -70,6 +70,31 @@ builder.Services.AddMassTransit(x =>
 // Register outbox publisher worker which will read OutboxMessages and publish to RabbitMQ
 builder.Services.AddHostedService<OrderService.Worker>();
 
+// In-memory caching and supporting services (minimal setup)
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<OrderService.Services.CacheManager>(sp =>
+{
+    var cfg = sp.GetRequiredService<IConfiguration>();
+    var orderTtl = cfg.GetValue<int?>("CacheSettings:OrderTtlSeconds") ?? 30;
+    var ordersListTtl = cfg.GetValue<int?>("CacheSettings:OrdersListTtlSeconds") ?? 15;
+    return new OrderService.Services.CacheManager(orderTtl, ordersListTtl);
+});
+builder.Services.AddSingleton<OrderService.Services.CacheMetrics>();
+
+// Create a temporary service provider to log cache configuration via the app logger
+// so cache settings are visible at startup/runtime.
+using (var _sp = builder.Services.BuildServiceProvider())
+{
+    try
+    {
+        var cm = _sp.GetRequiredService<OrderService.Services.CacheManager>();
+        var lf = _sp.GetRequiredService<Microsoft.Extensions.Logging.ILoggerFactory>();
+        var cacheLogger = lf.CreateLogger("Cache");
+        cacheLogger.LogInformation("In-memory cache enabled. OrderTtl={OrderTtl}s, OrdersListTtl={OrdersListTtl}s", cm.GetOrderTtlSeconds(), cm.GetOrdersListTtlSeconds());
+    }
+    catch { }
+}
+
 // Register application services
 builder.Services.AddScoped<OrderService.Services.OrderService>();
 builder.Services.AddScoped<OrderService.Interfaces.IOrderService>(sp => sp.GetRequiredService<OrderService.Services.OrderService>());

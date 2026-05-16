@@ -34,7 +34,11 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
     {
         logger.LogInformation("Outbox Publisher Worker started");
 
-        // Simple outbox publisher loop
+        // Simple outbox publisher loop with backoff when idle
+        var baseDelay = TimeSpan.FromSeconds(1);
+        var maxDelay = TimeSpan.FromSeconds(60);
+        var currentDelay = baseDelay;
+
         while (!stoppingToken.IsCancellationRequested)
         {
             try
@@ -166,6 +170,17 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
                 // Persist Outbox message PublishedAtUtc / Error changes so messages are
                 // marked published and won't be re-sent.
                 await db.SaveChangesAsync(stoppingToken);
+
+                // Backoff strategy: if there were no pending messages, increase delay up to maxDelay
+                if (pending.Count == 0)
+                {
+                    currentDelay = TimeSpan.FromSeconds(Math.Min(maxDelay.TotalSeconds, currentDelay.TotalSeconds * 2));
+                }
+                else
+                {
+                    // Reset delay when we did work
+                    currentDelay = baseDelay;
+                }
             }
             catch (OperationCanceledException)
             {
@@ -176,7 +191,15 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory, I
                 logger.LogError(ex, "Outbox worker failure");
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+            // Wait with current delay (backoff when idle)
+            try
+            {
+                await Task.Delay(currentDelay, stoppingToken);
+            }
+            catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+            {
+                break;
+            }
         }
 
         logger.LogInformation("Outbox Publisher Worker stopped");

@@ -176,7 +176,8 @@ function renderOrders() {
         if (search) {
             const email = (o.email || '').toLowerCase();
             const itemsText = (o.items || []).map(it => (it.productName || '').toLowerCase()).join(' ');
-            if (email.indexOf(search) === -1 && itemsText.indexOf(search) === -1) return false;
+            const idText = String(o.id || o.orderId || '').toLowerCase();
+            if (email.indexOf(search) === -1 && itemsText.indexOf(search) === -1 && idText.indexOf(search) === -1) return false;
         }
         return true;
     });
@@ -214,7 +215,16 @@ function renderOrders() {
             if (orderStatusId === 3) actions.push(`<button class="btn btn-sm btn-success me-1" data-deliver="${o.id}">Mark Delivered</button>`);
         }
 
-        return `<div class="list-group-item d-flex justify-content-between align-items-center" data-order-id="${o.id}"><div><div><strong>${escapeHtml(o.email)}</strong> <small class="text-muted">${escapeHtml(status)}</small></div><div class="text-muted">${itemsText}</div></div><div>${actions.join('')}</div></div>`;
+        // show short order id for quick reference
+        const shortId = String(o.id || o.orderId || '').slice(0, 8);
+        return `<div class="list-group-item d-flex justify-content-between align-items-center" data-order-id="${o.id}">
+                    <div>
+                        <div><strong>${escapeHtml(o.email)}</strong> <small class="text-muted">${escapeHtml(status)}</small></div>
+                        <div class="text-muted">${itemsText}</div>
+                        <div class="text-muted small">OrderId: ${escapeHtml(shortId)}</div>
+                    </div>
+                    <div>${actions.join('')} <button class="btn btn-sm btn-outline-info ms-2" data-view="${o.id}">View</button></div>
+                </div>`;
     }).join('');
 
     container.innerHTML = html;
@@ -225,6 +235,10 @@ function renderOrders() {
     container.querySelectorAll('[data-ship]').forEach(btn => btn.addEventListener('click', () => shipOrder(btn.getAttribute('data-ship'), btn)));
     // delegate deliver buttons - pass the button element so handler can update UI optimistically
     container.querySelectorAll('[data-deliver]').forEach(btn => btn.addEventListener('click', () => deliverOrder(btn.getAttribute('data-deliver'), btn)));
+
+    // delegate view buttons (install directly so they always work after render)
+    container.querySelectorAll('[data-view]').forEach(btn => btn.addEventListener('click', () => showOrderDetails(btn.getAttribute('data-view'))));
+
 }
 
 async function refreshOrder(id) {
@@ -240,6 +254,7 @@ async function refreshOrder(id) {
             // if not present, add
             allOrders.push(order);
         }
+
         // re-render orders to reflect updated status
         renderOrders();
         return order;
@@ -247,6 +262,30 @@ async function refreshOrder(id) {
         console.error('Failed to refresh order', e);
         return null;
     }
+}
+
+async function showOrderDetails(id) {
+    try {
+        const res = await apiFetch('/api/orders/' + id);
+        if (!res.ok) return;
+        const o = await res.json();
+        const body = document.getElementById('orderDetailsBody');
+        const itemsHtml = (o.items || []).map(it => `<li>${escapeHtml(it.productName)} — ${it.quantity} × $${Number(it.unitPrice).toFixed(2)}</li>`).join('');
+        body.innerHTML = `
+            <div><strong>Order ID:</strong> ${escapeHtml(String(o.id))}</div>
+            <div><strong>Email:</strong> ${escapeHtml(o.email || '')}</div>
+            <div><strong>Status:</strong> ${escapeHtml(getStatusText(o.status || o.statusId))}</div>
+            <div><strong>Created:</strong> ${escapeHtml(o.createdAtUtc || '')}</div>
+            <hr />
+            <h6>Items</h6>
+            <ul>${itemsHtml}</ul>
+            <div class="mt-2"><strong>Total:</strong> $${Number(o.totalAmount || o.TotalAmount || 0).toFixed(2)}</div>
+        `;
+        // Show modal using getOrCreateInstance if available to avoid duplicate instances
+        const modalEl = document.getElementById('orderDetailsModal');
+        const modal = (bootstrap.Modal.getOrCreateInstance && bootstrap.Modal.getOrCreateInstance(modalEl)) || new bootstrap.Modal(modalEl);
+        modal.show();
+    } catch (e) { console.error('Failed to load order details', e); }
 }
 
 async function cancelOrder(id, btn) {
@@ -260,18 +299,33 @@ async function cancelOrder(id, btn) {
         btn.dataset.origText = btn.innerText;
         btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cancelling';
     }
+    // Immediately hide details modal (if open) to avoid UI being blocked while request runs
+    try {
+        const modalEl = document.getElementById('orderDetailsModal');
+        if (modalEl) {
+            const inst = (bootstrap.Modal.getOrCreateInstance && bootstrap.Modal.getOrCreateInstance(modalEl)) || (bootstrap.Modal.getInstance && bootstrap.Modal.getInstance(modalEl));
+            try { inst && inst.hide(); } catch (e) { }
+        }
+        document.querySelectorAll('.modal-backdrop').forEach(n => n.remove());
+        document.body.classList.remove('modal-open');
+    } catch (e) { /* ignore modal cleanup errors */ }
 
     try {
         const res = await apiFetch('/api/orders/' + id, { method: 'DELETE' });
         if (res.ok) {
-            await refreshOrder(id);
+            await loadOrders();
         } else {
             const txt = await res.text().catch(() => 'Failed');
             alert('Cancel failed: ' + txt);
-            if (item) item.querySelectorAll('button').forEach(b => b.disabled = false);
-            if (btn) btn.innerText = btn.dataset.origText || 'Cancel';
         }
-    } catch (e) { console.error(e); alert('Cancel failed'); if (item) item.querySelectorAll('button').forEach(b => b.disabled = false); if (btn) btn.innerText = btn.dataset.origText || 'Cancel'; }
+    } catch (e) {
+        console.error(e);
+        alert('Cancel failed');
+    } finally {
+        // re-enable UI
+        try { if (item) item.querySelectorAll('button').forEach(b => b.disabled = false); } catch {}
+        try { if (btn) btn.innerText = btn.dataset.origText || 'Cancel'; } catch {}
+    }
 }
 
 async function shipOrder(id, btn) {
@@ -399,6 +453,21 @@ async function initApp() {
     await loadProducts();
     await loadOrders();
 
+    // Install a single delegated click handler for view buttons so it works
+    // even when the list is re-rendered. Uses a global flag to avoid double registration.
+    if (!window._viewHandlerInstalled) {
+        document.addEventListener('click', (ev) => {
+            try {
+                const btn = ev.target.closest('[data-view]');
+                if (btn) {
+                    const id = btn.getAttribute('data-view');
+                    if (id) showOrderDetails(id);
+                }
+            } catch (e) { /* ignore */ }
+        });
+        window._viewHandlerInstalled = true;
+    }
+
     // Start periodic polling to pick up background status changes (orders processed by background workers)
     // Poll only visible orders to avoid unnecessary load.
     setInterval(() => {
@@ -410,7 +479,7 @@ async function initApp() {
                 if (id) refreshOrder(id);
             });
         } catch (e) { /* ignore polling errors */ }
-    }, 10_000);
+    }, 600_000);
 
     try {
         const params = new URLSearchParams(window.location.search);

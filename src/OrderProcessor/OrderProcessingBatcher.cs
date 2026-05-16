@@ -31,6 +31,7 @@ public class OrderProcessingBatcher : IAsyncDisposable
     private readonly Task _worker;
     private readonly TimeSpan _interval;
     private readonly int _batchSize;
+    private readonly bool _processOnEnqueue;
     private readonly SemaphoreSlim _signal = new(0);
 
     /// <summary>
@@ -46,22 +47,37 @@ public class OrderProcessingBatcher : IAsyncDisposable
         _logger = logger;
         _publishEndpoint = publishEndpoint;
 
+        // Read configuration from the "Batcher" section so values come from
+        // appsettings.json or environment variables (Batcher__IntervalMinutes etc.).
         var minutes = 5;
         var batchSize = 50;
+        var processOnEnqueue = true;
         try
         {
-            var s = config?["Batcher:IntervalMinutes"];
-            if (!string.IsNullOrEmpty(s) && int.TryParse(s, out var m)) minutes = m;
-
-            var bs = config?["Batcher:BatchSize"];
-            if (!string.IsNullOrEmpty(bs) && int.TryParse(bs, out var b)) batchSize = b;
+            var section = config?.GetSection("Batcher");
+            if (section != null)
+            {
+                minutes = section.GetValue<int>("IntervalMinutes", minutes);
+                batchSize = section.GetValue<int>("BatchSize", batchSize);
+                processOnEnqueue = section.GetValue<bool>("ProcessOnEnqueue", processOnEnqueue);
+            }
+            else
+            {
+                minutes = config?.GetValue<int?>("Batcher:IntervalMinutes") ?? minutes;
+                batchSize = config?.GetValue<int?>("Batcher:BatchSize") ?? batchSize;
+                processOnEnqueue = config?.GetValue<bool?>("Batcher:ProcessOnEnqueue") ?? processOnEnqueue;
+            }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to read batcher configuration, using defaults");
+        }
 
-        _interval = TimeSpan.FromMinutes(minutes);
+        _interval = TimeSpan.FromMinutes(Math.Max(1, minutes));
         _batchSize = Math.Max(1, batchSize);
+        _processOnEnqueue = processOnEnqueue;
 
-        _logger.LogInformation("OrderProcessingBatcher starting with interval {Minutes}m and batch size {BatchSize}", minutes, _batchSize);
+        _logger.LogInformation("OrderProcessingBatcher starting with interval {Minutes}m and batch size {BatchSize} (ProcessOnEnqueue={ProcessOnEnqueue})", minutes, _batchSize, _processOnEnqueue);
 
         _worker = Task.Run(() => RunAsync(_cts.Token));
 
@@ -90,9 +106,16 @@ public class OrderProcessingBatcher : IAsyncDisposable
                 {
                     Enqueue(id);
                 }
-
                 if (allIds.Count > 0)
+                {
                     _logger.LogInformation("Seeded {Count} pending orders into batcher on startup", allIds.Count);
+                    // If configured to not process immediately on enqueue, kick the worker once
+                    // so seeded work is handled at least once on startup as requested.
+                    if (!_processOnEnqueue)
+                    {
+                        try { _signal.Release(); } catch { }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -108,8 +131,11 @@ public class OrderProcessingBatcher : IAsyncDisposable
     public void Enqueue(Guid orderId)
     {
         _queue.Enqueue(orderId);
-        // signal worker to wake and process sooner than the full interval
-        try { _signal.Release(); } catch { }
+        // signal worker to wake and process sooner than the full interval only if configured
+        if (_processOnEnqueue)
+        {
+            try { _signal.Release(); } catch { }
+        }
     }
 
     /// <summary>
