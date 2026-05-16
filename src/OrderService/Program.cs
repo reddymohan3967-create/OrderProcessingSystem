@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Events;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 using MassTransit;
@@ -6,7 +8,18 @@ using OrderService.Data;
 using Microsoft.AspNetCore.Authentication;
 using OrderService.Authentication;
 
+// Bootstrap Serilog early so startup logs are captured
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 7)
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Replace default logging with Serilog
+builder.Host.UseSerilog();
 
 // Very small and explicit Program: register controllers, DB and cookie auth
 builder.Services.AddControllers();
@@ -114,6 +127,10 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
+// Ensure Serilog flushes on shutdown
+try
+{
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -132,3 +149,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+}
+finally
+{
+    try { Log.CloseAndFlush(); } catch { }
+}

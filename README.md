@@ -17,6 +17,13 @@ Contents
 - `src/NotificationService` — Example service that demonstrates sending notifications (e.g., email) when events occur.
 - `src/Shared.Contracts` — Shared DTOs and event definitions used across services.
 
+Recent changes
+--------------
+
+- Serilog has been added to `src/OrderService` to provide simple file-based observability with minimal code changes.
+  - Logs are written to `logs/log-.txt` (rolling daily files) and the project retains the last 7 files by default.
+  - The `logs/` folder is ignored in `.gitignore`.
+
 Key concepts
 
 - Outbox pattern: events are written to an `OutboxMessages` table inside the same transaction that mutates the domain state. A separate worker publishes pending outbox rows to the message broker and marks them as published.
