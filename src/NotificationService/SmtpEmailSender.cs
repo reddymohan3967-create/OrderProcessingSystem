@@ -38,12 +38,12 @@ public class SmtpEmailSender : IEmailSender
     {
         // Read SMTP configuration from app configuration (appsettings.json, env, or user-secrets)
         var section = _config.GetSection("Smtp");
-        var host = section["Host"] ?? "smtp.gmail.com";
-        var port = int.TryParse(section["Port"], out var p) ? p : 587;
-        var useStartTls = bool.TryParse(section["UseStartTls"], out var s) && s;
+        var host =   "smtp.gmail.com";
+        var port =  587;
+        var useStartTls = true;
         var username = section["Username"] ?? string.Empty;
         var password = section["Password"] ?? string.Empty;
-        var from = section["From"] ?? username;
+        var from = section["Username"] ?? string.Empty;
 
         var message = new MimeMessage();
         try
